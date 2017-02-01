@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#ROS
+build/
+devel/
+
 # C extensions
 *.so
 
