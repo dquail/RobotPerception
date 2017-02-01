@@ -14,14 +14,14 @@ $source ./devel/setup.bash
 ###1. Create the workspace folder structure.
 A workspace is where common packages for your project will exist. You can have multiple workspaces spread across your filesystem.   
 #For me, I'm creating a project that will eventually allow a robotic digger to learn the optimal way to dig sand. Hence the name of the workspace
-```python
+```
 $mkdir -p RobotDigger
 $cd RobotDigger
 $mkdir src
 ```
 
 ###2. Initialize the workspace:
-```python
+```
 $cd src
 $catkin_init_workspace
 ```
@@ -53,7 +53,7 @@ $source devel/setup.bash
 This gets you into the habit of including a proper description, for your package.
 
 ###7. Create a publisher node
-```python
+```
 #Create a script folder at same level as src
 $mkdir scripts 
 $ wget https://raw.github.com/ros/ros_tutorials/kinetic-devel/rospy_tutorials/001_talker_listener/talker.py
@@ -61,42 +61,43 @@ $ wget https://raw.github.com/ros/ros_tutorials/kinetic-devel/rospy_tutorials/00
 $ chmod +x talker.py
 ```
 ###8. Create the subscriber node
-```python
+```
 $ wget https://raw.github.com/ros/ros_tutorials/kinetic-devel/rospy_tutorials/001_talker_listener/listener.py
 $ chmod +x listener.py
 ```
 
 ###9. Create the package
-```python
+```
 $cd ..
 $catkin_make
 ```
 
 ###10. Start the publisher
-```python
+```
 #Make sure roscore is running
 $roscore
 $rosrun robot_digger talker.py
 ```
-*I needed to pip install rospkg
+
+I needed to pip install rospkg
 
 ###10. Install dynamixel_ros - Creating a different test package
-```python
+```
 $sudo apt-get install ros-indigo-dynamixel-motor
 ```
 
 ###11. Create test package for dynamixel
-```python
+```
 $catkin_create_pkg my_dynamixel_tutorial dynamixel_controllers std_msgs rospy roscpp
 ```
 ###12. Create the launch file for easily launching the controller
-```python
+```
 $mkdir launch
 $cd launch
-```python
+```
 
 ###13. Create controller_manager.launch with:
-```xml
+```
 <!-- -*- mode: XML -*- -->
 
 <launch>
@@ -113,31 +114,33 @@ $cd launch
         </rosparam>
     </node>
 </launch>
-```xml
+```
 
-*Make sure your dev/tty port matches what's on your computer
+Make sure your dev/tty port matches what's on your computer
 
 
-*Use Python 2.7 (dynamixel was assuming that but by default pyhon was 3.5)
+Use Python 2.7 (dynamixel was assuming that but by default pyhon was 3.5)
+```
 conda create -n py27 python=2.7 anaconda
 source activate py27
-
-* A whole bunch of issues around getting the right version of python. It needs to be 2.7. That's what indigo uses. So you also need to make sure that that version
+```
+A whole bunch of issues around getting the right version of python. It needs to be 2.7. That's what indigo uses. So you also need to make sure that that version
 is using pyserial 2.7 (an old version.)
 
 ###13. Make sure that roscore is running
-```python
+```
 $roscore
 ```
 
 ###14. Start the controller_manager
-```python
+```
 $roslaunch my_dynamixel_tutorial controller_manager.launch
 ```
 
 ###15. Look at the output
-```python
+```
 $rostopic echo /motor_states/pan_tilt_port
+```
 
 ###16. Control the motor
 Create the yaml file tilt.yaml
@@ -157,7 +160,7 @@ tilt_controller:
 ```
 
 Create the launch file
-```yaml
+```
 <launch>
     <!-- Start tilt joint controller -->
     <rosparam file="$(find my_dynamixel_tutorial)/tilt.yaml" command="load"/>
@@ -170,7 +173,7 @@ Create the launch file
 ```
 
 Launch the controller
-```python
+```
 $roslaunch my_dynamixel_tutorial start_tilt_controller.launch
 ```
 
@@ -183,7 +186,7 @@ rostopic pub -1 /tilt_controller/command std_msgs/Float64 -- 1.5
 ROS has a nice plotting tool called rqt_plot
 You can launch it using 
 
-```python
+```
 rqt_plot
 ```
 
