@@ -6,10 +6,12 @@ The only assumption that I have is that you have ROS (I used Indigo) installed, 
 
 ##Getting started
 
-##Common commands
-*Currently required for each terminal tab
+*Currently I need to activate python 2.7 and source the bash file for each terminal window that is opened. Otherwise ... cryptic errors be had! I'm sure there's an elegant way to set up bash so I don't have to do this each time ...
+
+```
 $source activate py27
 $source ./devel/setup.bash
+```
 
 ###1. Create the workspace folder structure.
 A workspace is where common packages for your project will exist. You can have multiple workspaces spread across your filesystem.   
