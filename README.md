@@ -13,7 +13,8 @@ $source ./devel/setup.bash
 
 ###1. Create the workspace folder structure.
 A workspace is where common packages for your project will exist. You can have multiple workspaces spread across your filesystem.   
-#For me, I'm creating a project that will eventually allow a robotic digger to learn the optimal way to dig sand. Hence the name of the workspace
+
+For me, I'm creating a project that will eventually allow a robotic digger to learn the optimal way to dig sand. Hence the name of the workspace
 ```
 $mkdir -p RobotDigger
 $cd RobotDigger
