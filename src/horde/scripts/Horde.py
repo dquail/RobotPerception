@@ -66,9 +66,6 @@ class Horde:
         print("Horde received data: " + str(data))
         val = data.data
 
-
-        print("Horde received data: " + str(data))
-
         if len(self.previousState) == 0:
             #We can't learn unless we have an initial state.
             self.previousState = tileCode(val)
@@ -76,17 +73,11 @@ class Horde:
         else:
             observation = val
 
-            print("do some action")
-            print("Getting action from policy")
             self.previousAction = self.behaviorPolicy.policy()
-            print("Received action: " + str(self.previousAction))
-            print("Performing action")
-            #self.performAction(self.previousAction)
-            print("Performed action")
+            self.performAction(self.previousAction)
 
             #Learning
             featureVector = tileCode(observation)
-            print("Feature vector: " + str(featureVector))
 
             for demon in self.demons:
                 demon.learn(self.previousState, self.previousAction, featureVector, observation)

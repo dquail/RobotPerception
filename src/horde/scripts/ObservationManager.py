@@ -52,7 +52,7 @@ class ObservationManager:
         self.motoEncoder = data.motor_states[0].position
 
     def publishObservation(self):
-        print("In publishObservation")
+        print("In publishObservation with value of publishing: " + str(self.motoEncoder))
         # Test republishing the message for plotting purposes
         pub = rospy.Publisher('observation_manager/servo_position', Int16, queue_size=10)
         pub.publish(self.motoEncoder)
