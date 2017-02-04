@@ -18,6 +18,7 @@ import yaml
 
 from std_msgs.msg import String
 from std_msgs.msg import Int16
+from std_msgs.msg import Float64
 
 from dynamixel_driver.dynamixel_const import *
 
@@ -28,6 +29,10 @@ from diagnostic_msgs.msg import KeyValue
 from dynamixel_msgs.msg import MotorState
 from dynamixel_msgs.msg import MotorStateList
 
+from BehaviorPolicy import *
+from TDLambda import *
+from TileCoder import *
+
 """
 sets up the subscribers and starts to broadcast the results in a thread every 0.1 seconds
 """
@@ -36,15 +41,53 @@ class Horde:
 
     def __init__(self):
         self.demons = []
+        self.behaviorPolicy = BehaviorPolicy()
+
+        extremeLeftPrediction = TDLambda(103, 0.05)
+        self.demons.append(extremeLeftPrediction)
+        self.previousState = []
+
         #Initialize the sensory values of interest
+
+    def performAction(self, action):
+        #Take the action and issue the actual dynamixel command
+        pub = rospy.Publisher('tilt_controller/command', Float64, queue_size=10)
+
+        if (action ==1):
+            #Move left
+            pub.publish(0.0)
+        elif (action == 2):
+            pub.publish(3.0)
 
 
     # Sensor callbacks
     def receiveObservationCallback(self, data):
         print("Horde received data" + str(data))
 
-        print("do some action")
-        print("Do the learning for each demon")
+        if len(self.previousState) == 0:
+            #We can't learn unless we have an initial state.
+            self.previousState = tileCode(data)
+
+        else:
+            observation = data
+
+            print("do some action")
+            print("Getting action from policy")
+            self.previousAction = self.behaviorPolicy.policy()
+            print("Received action: " + str(self.previousAction))
+            print("Performing action")
+            #self.performAction(self.previousAction)
+            print("Performed action")
+
+            #Learning
+            featureVector = tileCode(observation)
+            print("Feature vector: " + str(featureVector))
+
+            for demon in self.demons:
+                demon.learn(self.previousState, self.previousAction, featureVector, observation)
+            self.previousState = featureVector
+
+
 
     def start(self):
         print("In Horde start")
@@ -54,7 +97,12 @@ class Horde:
 
 
         rospy.spin()
-
+"""
+h = Horde()
+h.receiveObservationCallback(53)
+h.receiveObservationCallback(110)
+h.prediction()
+"""
 
 if __name__ == '__main__':
     horde = Horde()

@@ -25,17 +25,39 @@ class TDLambda:
     def cummulant(self, state, observation):
         return 1
 
-    def learn(self, lastState, newState, observation):
-
+    def learn(self, lastState, action, newState, observation):
+        print("!!!!! LEARN  !!!!!!!")
+        print("lastState: " )
+        print(lastState)
+        print("action")
+        print(action)
+        print("NewState")
+        print(newState)
+        print("Observation:" + str(observation))
+        print("Weights before:")
+        print(self.weights)
         zNext = self.cummulant(newState, observation)
+        print("Cummulant: " + str(zNext))
         gammaNext = self.gamma(newState, observation)
+        print("gammaNext: " + str(gammaNext))
         lam = self.lam(newState, observation)
+        print("gammaLast: " + str(self.gammaLast))
 
+        print("lambda: " + str(lam))
+        print("Eligibility before:")
+        print(self.eligibilityTrace)
         self.eligibilityTrace = self.gammaLast * lam * self.eligibilityTrace + lastState
+        print("Eligibility trace after:")
+        print(self.eligibilityTrace)
         tdError = zNext + gammaNext * numpy.inner(newState, self.weights) - numpy.inner(lastState, self.weights)
+
+        print("tdError: " + str(tdError))
+        print("Weights before:")
+        print(self.weights)
         self.weights = self.weights + self.alpha * tdError * self.eligibilityTrace
 
-
+        print("wEights after: ")
+        print(self.weights)
         self.gammaLast = gammaNext
 
     def prediction(self, state):
