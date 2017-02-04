@@ -62,14 +62,19 @@ class Horde:
 
     # Sensor callbacks
     def receiveObservationCallback(self, data):
-        print("Horde received data" + str(data))
+        #TODO - Terrible conversion from Int16 to int. Need to fix this.
+        print("Horde received data: " + str(data))
+        val = data.data
+
+
+        print("Horde received data: " + str(data))
 
         if len(self.previousState) == 0:
             #We can't learn unless we have an initial state.
-            self.previousState = tileCode(data)
+            self.previousState = tileCode(val)
 
         else:
-            observation = data
+            observation = val
 
             print("do some action")
             print("Getting action from policy")
