@@ -16,6 +16,7 @@ import rospy
 import threading
 import yaml
 
+
 from std_msgs.msg import String
 from std_msgs.msg import Int16
 from std_msgs.msg import Float64
@@ -32,6 +33,8 @@ from dynamixel_msgs.msg import MotorStateList
 from BehaviorPolicy import *
 from TDLambda import *
 from TileCoder import *
+from StepsToLeftDemon import *
+from Verifier import *
 
 """
 sets up the subscribers and starts to broadcast the results in a thread every 0.1 seconds
@@ -41,10 +44,16 @@ class Horde:
 
     def __init__(self):
         self.demons = []
+        self.verifiers = []
+
         self.behaviorPolicy = BehaviorPolicy()
 
-        extremeLeftPrediction = TDLambda(103, 0.05)
+        extremeLeftPrediction = StepsToLeftDemon(103, 0.05)
+        extremeLeftVerifier = Verifier()
+
         self.demons.append(extremeLeftPrediction)
+        self.verifiers.append(extremeLeftVerifier)
+
         self.previousState = []
 
         #Initialize the sensory values of interest
@@ -79,8 +88,12 @@ class Horde:
             #Learning
             featureVector = tileCode(observation)
 
-            for demon in self.demons:
-                demon.learn(self.previousState, self.previousAction, featureVector, observation)
+            for i in range(0, len(self.demons)):
+
+                self.demons[i].learn(self.previousState, self.previousAction, featureVector, observation)
+                print("Verifying")
+                self.verifiers[i].append(self.demons[i].gamma(featureVector, observation), self.demons[i].cumulant(featureVector, observation), self.demons[i].prediction())
+
             self.previousState = featureVector
 
 
@@ -93,12 +106,6 @@ class Horde:
 
 
         rospy.spin()
-"""
-h = Horde()
-h.receiveObservationCallback(53)
-h.receiveObservationCallback(110)
-h.prediction()
-"""
 
 if __name__ == '__main__':
     horde = Horde()
