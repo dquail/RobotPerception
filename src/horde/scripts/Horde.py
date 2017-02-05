@@ -82,9 +82,7 @@ class Horde:
         else:
             observation = val
             action  = self.behaviorPolicy.policy()
-            if (observation == 1023):
-                #REMOVE AFTER TESTING
-                action = 1
+
             self.previousAction = action
             self.performAction(self.previousAction)
 

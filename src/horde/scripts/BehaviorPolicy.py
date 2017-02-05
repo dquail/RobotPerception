@@ -10,7 +10,7 @@ class BehaviorPolicy:
         self.lastAction = 0
 
     def policy(self):
-        if (randint(0,9) < 7):
+        if (randint(0,9) < 3):
             #50 of the time, do the previous action
             return self.lastAction
         else:

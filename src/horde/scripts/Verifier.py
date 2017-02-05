@@ -31,7 +31,7 @@ class Verifier:
         self.gammas[0] = 1
         for i in range(0, len(self.gammas)):
             runningGamma = runningGamma * self.gammas[i]
-            runningCumulant = runningCumulant + self.cumulants[i] * gamma
+            runningCumulant = runningCumulant + self.cumulants[i] * runningGamma
 
 
             #TODO jump out of for loop if runningGamma = 0 since no point
