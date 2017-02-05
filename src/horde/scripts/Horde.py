@@ -49,7 +49,7 @@ class Horde:
         self.behaviorPolicy = BehaviorPolicy()
 
         extremeLeftPrediction = StepsToLeftDemon(103, 0.05)
-        extremeLeftVerifier = Verifier()
+        extremeLeftVerifier = Verifier(50)
 
         self.demons.append(extremeLeftPrediction)
         self.verifiers.append(extremeLeftVerifier)
@@ -81,8 +81,11 @@ class Horde:
 
         else:
             observation = val
-
-            self.previousAction = self.behaviorPolicy.policy()
+            action  = self.behaviorPolicy.policy()
+            if (observation == 1023):
+                #REMOVE AFTER TESTING
+                action = 1
+            self.previousAction = action
             self.performAction(self.previousAction)
 
             #Learning
@@ -91,8 +94,7 @@ class Horde:
             for i in range(0, len(self.demons)):
 
                 self.demons[i].learn(self.previousState, self.previousAction, featureVector, observation)
-                print("Verifying")
-                self.verifiers[i].append(self.demons[i].gamma(featureVector, observation), self.demons[i].cumulant(featureVector, observation), self.demons[i].prediction())
+                self.verifiers[i].append(self.demons[i].gamma(featureVector, observation), self.demons[i].cummulant(featureVector, observation), self.demons[i].prediction(featureVector), observation)
 
             self.previousState = featureVector
 
