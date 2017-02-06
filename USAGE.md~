@@ -27,5 +27,6 @@ rosrun horde ObservationManager.py
 $rostopic echo /observation_manager/servo_positions
 
 
-
+8. Start horde
+$rosrun horde Horde.py
 

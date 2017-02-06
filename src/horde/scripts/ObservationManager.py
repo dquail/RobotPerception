@@ -41,7 +41,7 @@ sets up the subscribers and starts to broadcast the results in a thread every 0.
 class ObservationManager:
 
     def __init__(self):
-        self.publishingFrequency = 1
+        self.publishingFrequency = 0.5 #Seconds between updates
         #Initialize the sensory values of interest
         self.motoEncoder = 0
 

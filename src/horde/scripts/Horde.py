@@ -48,11 +48,16 @@ class Horde:
 
         self.behaviorPolicy = BehaviorPolicy()
 
-        extremeLeftPrediction = StepsToLeftDemon(103, 0.05)
+        self.numTiles = 12
+        self.numTilings = 15
+
+        extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTilings, 1.0/(20.0 * self.numTilings))
         extremeLeftVerifier = Verifier(50)
 
         self.demons.append(extremeLeftPrediction)
         self.verifiers.append(extremeLeftVerifier)
+
+
 
         self.previousState = []
 
@@ -77,8 +82,8 @@ class Horde:
 
         if len(self.previousState) == 0:
             #We can't learn unless we have an initial state.
-            self.previousState = tileCode(val)
-
+            self.previousState = tileCode(self.numTilings, self.numTilings * self.numTiles, [(val/1023) * self.numTiles])
+            #self.previousState = tiles(self.numTilings, self.numTilings * self.numTiles, [(val/1023) * self.numTiles])
         else:
             observation = val
             action  = self.behaviorPolicy.policy()
@@ -87,8 +92,8 @@ class Horde:
             self.performAction(self.previousAction)
 
             #Learning
-            featureVector = tileCode(observation)
-
+            featureVector = tileCode(self.numTilings, self.numTilings * self.numTiles, [(observation/1023) * self.numTiles])
+            #featureVector = tiles(self.numTilings, self.numTilings * self.numTiles, [(observation/1023) * self.numTiles])
             for i in range(0, len(self.demons)):
 
                 self.demons[i].learn(self.previousState, self.previousAction, featureVector, observation)
