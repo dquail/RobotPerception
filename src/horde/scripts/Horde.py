@@ -15,7 +15,7 @@ With those observations it can make next actions as well as have each demon lear
 import rospy
 import threading
 import yaml
-
+import json
 
 from std_msgs.msg import String
 from std_msgs.msg import Int16
@@ -34,6 +34,7 @@ from BehaviorPolicy import *
 from TDLambda import *
 from TileCoder import *
 from StepsToLeftDemon import *
+from DirectStepsToLeftDemon import *
 from Verifier import *
 
 """
@@ -48,15 +49,19 @@ class Horde:
 
         self.behaviorPolicy = BehaviorPolicy()
 
-        self.numTiles = 12
-        self.numTilings = 15
+        self.numTiles = 8
+        self.numTilings = 8
 
-        extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTilings, 1.0/(20.0 * self.numTilings))
-        extremeLeftVerifier = Verifier(50)
+        #extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        #extremeLeftVerifier = Verifier(50)
 
-        self.demons.append(extremeLeftPrediction)
-        self.verifiers.append(extremeLeftVerifier)
+        directLeftPrediction = DirectStepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        directLeftVerifier = Verifier(50)
 
+        #self.demons.append(extremeLeftPrediction)
+        self.demons.append(directLeftPrediction)
+        #self.verifiers.append(extremeLeftVerifier)
+        self.verifiers.append(directLeftVerifier)
 
 
         self.previousState = []
@@ -78,21 +83,22 @@ class Horde:
     def receiveObservationCallback(self, data):
         #TODO - Terrible conversion from Int16 to int. Need to fix this.
         print("Horde received data: " + str(data))
-        val = data.data
+        jsonData = json.loads(data.data)
+        encoderPosition = jsonData['encoder']
+        speed = jsonData['speed']
 
         if len(self.previousState) == 0:
             #We can't learn unless we have an initial state.
-            self.previousState = tileCode(self.numTilings, self.numTilings * self.numTiles, [(val/1023) * self.numTiles])
-            #self.previousState = tiles(self.numTilings, self.numTilings * self.numTiles, [(val/1023) * self.numTiles])
+            self.previousState = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles, [((encoderPosition-510.0)/(1023.0-510.0)) * self.numTiles, ((speed + 200.0) / 400.0) * self.numTiles])
         else:
-            observation = val
+            observation = encoderPosition
             action  = self.behaviorPolicy.policy()
 
             self.previousAction = action
             self.performAction(self.previousAction)
 
             #Learning
-            featureVector = tileCode(self.numTilings, self.numTilings * self.numTiles, [(observation/1023) * self.numTiles])
+            featureVector = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles, [((encoderPosition-510.0)/(1023.0-510.0)) * self.numTiles, ((speed + 200.0) / 400.0) * self.numTiles])
             #featureVector = tiles(self.numTilings, self.numTilings * self.numTiles, [(observation/1023) * self.numTiles])
             for i in range(0, len(self.demons)):
 
@@ -101,14 +107,25 @@ class Horde:
 
             self.previousState = featureVector
 
-
+        movingLeftFeatureVector = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles,
+                             [((700 - 510.0) / (1023.0 - 510.0)) * self.numTiles,
+                              ((-150 + 200.0) / 400.0) * self.numTiles])
+        movingRightFeatureVector = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles,
+                             [((700 - 510.0) / (1023.0 - 510.0)) * self.numTiles,
+                              ((150 + 200.0) / 400.0) * self.numTiles])
+        leftPrediction = self.demons[0].prediction(movingLeftFeatureVector)
+        rightPrediction = self.demons[0].prediction(movingRightFeatureVector)
+        print"################"
+        print("Moving right prediction: " + str(rightPrediction))
+        print("Moving left prediction: " + str(leftPrediction))
+        print("###############")
 
     def start(self):
         print("In Horde start")
         rospy.init_node('horde', anonymous=True)
         # Subscribe to all of the relevent sensor information. To start, we're only interested in motor_states, produced by the dynamixels
-        rospy.Subscriber("observation_manager/servo_position", Int16, self.receiveObservationCallback)
-
+        #rospy.Subscriber("observation_manager/servo_position", Int16, self.receiveObservationCallback)
+        rospy.Subscriber("observation_manager/observation", String, self.receiveObservationCallback)
 
         rospy.spin()
 

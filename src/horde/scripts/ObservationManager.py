@@ -41,19 +41,29 @@ sets up the subscribers and starts to broadcast the results in a thread every 0.
 class ObservationManager:
 
     def __init__(self):
-        self.publishingFrequency = 0.5 #Seconds between updates
+        self.publishingFrequency = 0.2 #Seconds between updates
         #Initialize the sensory values of interest
         self.motoEncoder = 0
+        self.speed = 0
 
     # Sensor callbacks
     def motorStatesCallback(self, data):
         print("In observation_manager callback")
 
         self.motoEncoder = data.motor_states[0].position
+        self.speed = data.motor_states[0].speed
 
     def publishObservation(self):
         print("In publishObservation with value of publishing: " + str(self.motoEncoder))
         # Test republishing the message for plotting purposes
+        #TODO - publish the speed as well
+
+        pubObservation = rospy.Publisher('observation_manager/observation', String, queue_size = 10)
+        msgJSON = '{"encoder":' + str(self.motoEncoder) + ', "speed":' + str(self.speed) + '}'
+        msg = String()
+        msg.data = msgJSON
+        pubObservation.publish(msg)
+
         pub = rospy.Publisher('observation_manager/servo_position', Int16, queue_size=10)
         pub.publish(self.motoEncoder)
         #pub = rospy.Publisher('observation_manager_observation/moto_encoder', Int16, queue_size=10)

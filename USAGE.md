@@ -30,3 +30,6 @@ $rostopic echo /observation_manager/servo_positions
 8. Start horde
 $rosrun horde Horde.py
 
+9 Start horde monitor (for plotting)
+$rosrun horde HordeMonitor.py
+
