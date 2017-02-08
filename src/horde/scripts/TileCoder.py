@@ -5,7 +5,7 @@ from tiles import *
 
 def tileCode(numTilings, vectorLength, value):
     indexes = tiles(numTilings, vectorLength, value)
-    print("Tilecode for :" + str(value) + str(indexes))
+    #print("Tilecode for :" + str(value) + str(indexes))
     featureVector = numpy.zeros(vectorLength)
     for idx in indexes:
         featureVector[idx] = 1

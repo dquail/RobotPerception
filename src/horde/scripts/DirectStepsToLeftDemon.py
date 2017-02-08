@@ -8,9 +8,10 @@ class DirectStepsToLeftDemon(GTDLambda):
         GTDLambda.__init__(self, featureVectorLength, alpha)
 
     def gamma(self, state, observation):
-        if (observation == -1):
+        encoder = observation['encoder']
+        if (encoder == -1):
             return 0
-        elif (observation == 1023):
+        elif (encoder == 1023):
             #This represents the extreme position
             return 0
         else:
@@ -18,8 +19,8 @@ class DirectStepsToLeftDemon(GTDLambda):
 
     def rho(self, action):
         if (action == 2):
-            #our policy is to always move right.
-            #ie. how many steps if we were to go directly to the right.
+            #our policy is to always move left.
+            #ie. how many steps if we were to go directly to the left.
             return 1
         else:
             return 0
@@ -39,4 +40,3 @@ def test():
 
     d.learn(firstState, 2, secondState, 1023)
 
-test()

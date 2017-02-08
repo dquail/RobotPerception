@@ -12,9 +12,13 @@ class Verifier:
         self.predictions = []
         self.observations = []
 
-
     def append(self, gamma, cumulant, prediction, observation):
-        print("Verify append with observation: " + str(observation) + ", gamma: " + str(gamma) + ", cumulant: " + str(cumulant) + ", prediction: " + str(prediction))
+        encoder_position = observation['encoder']
+        speed = observation['speed']
+        load = observation['load']
+
+
+        print("Verify append with observation: " + str(encoder_position) + ", speed: " + str(speed) + ", load: " + str(load) + ", gamma: " + str(gamma) + ", cumulant: " + str(cumulant) + ", prediction: " + str(prediction))
         if (len(self.gammas) == self.bufferLength):
             #Remove the first item from the arrays
             self.gammas.pop(0)
@@ -25,7 +29,7 @@ class Verifier:
         self.gammas.append(gamma)
         self.cumulants.append(cumulant)
         self.predictions.append(prediction)
-        self.observations.append(observation)
+        self.observations.append(encoder_position)
         #First gamma has to be 1 since the return of first is always just the unweighted cumulant
 
         runningGamma = 1
@@ -60,7 +64,7 @@ class Verifier:
         pubPrediction = rospy.Publisher('horde_verifier/predicted', Float64, queue_size=10)
         pubPrediction.publish(self.predictions[0])
 
-        pubActual = rospy.Publisher('horde_verifier/actual', Int16, queue_size=10)
+        pubActual = rospy.Publisher('horde_verifier/actual', Float64, queue_size=10)
         pubActual.publish(runningCumulant)
 
         pubError = rospy.Publisher('horde_verifier/error', Float64, queue_size=10)

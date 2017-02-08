@@ -36,7 +36,7 @@ from TileCoder import *
 from StepsToLeftDemon import *
 from DirectStepsToLeftDemon import *
 from Verifier import *
-
+from PredictLoadDemon import *
 """
 sets up the subscribers and starts to broadcast the results in a thread every 0.1 seconds
 """
@@ -48,21 +48,25 @@ class Horde:
         self.verifiers = []
 
         self.behaviorPolicy = BehaviorPolicy()
-
+        self.previousAction = 0
         self.numTiles = 8
         self.numTilings = 8
 
-        #extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
-        #extremeLeftVerifier = Verifier(50)
+        extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        extremeLeftVerifier = Verifier(0)
 
-        directLeftPrediction = DirectStepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
-        directLeftVerifier = Verifier(50)
+        #directLeftPrediction = DirectStepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        #directLeftVerifier = Verifier(50)
 
-        #self.demons.append(extremeLeftPrediction)
-        self.demons.append(directLeftPrediction)
-        #self.verifiers.append(extremeLeftVerifier)
-        self.verifiers.append(directLeftVerifier)
+        predictLoadPrediction = PredictLoadDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        #predictLoadVerifier = Verifier(5)
 
+        self.demons.append(extremeLeftPrediction)
+        #self.demons.append(directLeftPrediction)
+        #self.demons.append(predictLoadPrediction)
+        self.verifiers.append(extremeLeftVerifier)
+        #self.verifiers.append(directLeftVerifier)
+        #self.verifiers.append(predictLoadVerifier)
 
         self.previousState = []
 
@@ -83,30 +87,31 @@ class Horde:
     def receiveObservationCallback(self, data):
         #TODO - Terrible conversion from Int16 to int. Need to fix this.
         print("Horde received data: " + str(data))
-        jsonData = json.loads(data.data)
-        encoderPosition = jsonData['encoder']
-        speed = jsonData['speed']
+        jsonObservation= json.loads(data.data)
+        encoderPosition = jsonObservation['encoder']
+        speed = jsonObservation['speed']
+        load = jsonObservation['load']
 
         if len(self.previousState) == 0:
             #We can't learn unless we have an initial state.
             self.previousState = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles, [((encoderPosition-510.0)/(1023.0-510.0)) * self.numTiles, ((speed + 200.0) / 400.0) * self.numTiles])
+            self.previousAction = 0
         else:
             observation = encoderPosition
             action  = self.behaviorPolicy.policy()
 
-            self.previousAction = action
-            self.performAction(self.previousAction)
+            self.performAction(action)
 
             #Learning
             featureVector = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles, [((encoderPosition-510.0)/(1023.0-510.0)) * self.numTiles, ((speed + 200.0) / 400.0) * self.numTiles])
             #featureVector = tiles(self.numTilings, self.numTilings * self.numTiles, [(observation/1023) * self.numTiles])
             for i in range(0, len(self.demons)):
-
-                self.demons[i].learn(self.previousState, self.previousAction, featureVector, observation)
-                self.verifiers[i].append(self.demons[i].gamma(featureVector, observation), self.demons[i].cummulant(featureVector, observation), self.demons[i].prediction(featureVector), observation)
+                self.demons[i].learn(self.previousState, self.previousAction, featureVector, jsonObservation)
+                self.verifiers[i].append(self.demons[i].gamma(featureVector, jsonObservation), self.demons[i].cumulant(featureVector, jsonObservation), self.demons[i].prediction(featureVector), jsonObservation)
 
             self.previousState = featureVector
-
+            self.previousAction = action
+        """
         movingLeftFeatureVector = tileCode(self.numTilings, self.numTilings * self.numTiles * self.numTiles,
                              [((700 - 510.0) / (1023.0 - 510.0)) * self.numTiles,
                               ((-150 + 200.0) / 400.0) * self.numTiles])
@@ -119,6 +124,7 @@ class Horde:
         print("Moving right prediction: " + str(rightPrediction))
         print("Moving left prediction: " + str(leftPrediction))
         print("###############")
+        """
 
     def start(self):
         print("In Horde start")
