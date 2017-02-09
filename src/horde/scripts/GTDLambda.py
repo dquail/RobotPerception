@@ -30,8 +30,8 @@ class GTDLambda(TDLambda):
         print("Observation:" + str(observation))
         #print("Weights before:")
         #print(self.weights)
-        zNext = self.cummulant(newState, observation)
-        print("Cummulant: " + str(zNext))
+        zNext = self.cumulant(newState, observation)
+        print("Cumulant: " + str(zNext))
         gammaNext = self.gamma(newState, observation)
         print("gammaNext: " + str(gammaNext))
         lam = self.lam(newState, observation)
@@ -67,10 +67,12 @@ class GTDLambda(TDLambda):
         pred = self.prediction(lastState)
         print("Prediction after learning: " + str(pred))
 
-        pubPrediction = rospy.Publisher('horde_verifier/GTDpredictedValue', Float64, queue_size=10)
-        pubPrediction.publish(pred)
-        pubObs = rospy.Publisher('horde_verifier/GTDpredictedEncoder', Float64, queue_size=10)
-        normalizedObs = 3 * (self.priorObservation - 510) / (1023-510)
-        pubObs.publish(normalizedObs )
         self.gammaLast = gammaNext
+        if (self.priorObservation > -1):
+            pubPrediction = rospy.Publisher('horde_verifier/GTDpredictedValue', Float64, queue_size=10)
+            pubPrediction.publish(pred)
+            pubObs = rospy.Publisher('horde_verifier/NormalizedEncoderPosition', Float64, queue_size=10)
+            normalizedObs = 3.0 * (self.priorObservation['encoder'] - 510.0) / (1023.0-510.0)
+            pubObs.publish(normalizedObs )
+
         self.priorObservation = observation

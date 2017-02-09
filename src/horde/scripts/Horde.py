@@ -52,21 +52,25 @@ class Horde:
         self.numTiles = 8
         self.numTilings = 8
 
+        """
         extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
         extremeLeftVerifier = Verifier(0)
-
-        #directLeftPrediction = DirectStepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
-        #directLeftVerifier = Verifier(50)
-
-        predictLoadPrediction = PredictLoadDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
-        #predictLoadVerifier = Verifier(5)
-
-        self.demons.append(extremeLeftPrediction)
-        #self.demons.append(directLeftPrediction)
-        #self.demons.append(predictLoadPrediction)
         self.verifiers.append(extremeLeftVerifier)
+        self.demons.append(extremeLeftPrediction)
+        """
+
+        directLeftPrediction = DirectStepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        self.demons.append(directLeftPrediction)
+        #Nothing can really be learned from off policy verifiers
+        #directLeftVerifier = Verifier(50)
         #self.verifiers.append(directLeftVerifier)
-        #self.verifiers.append(predictLoadVerifier)
+
+        """
+        predictLoadPrediction = PredictLoadDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
+        predictLoadVerifier = Verifier(5)
+        self.demons.append(predictLoadPrediction)
+        self.verifiers.append(predictLoadVerifier)
+        """
 
         self.previousState = []
 
@@ -107,7 +111,8 @@ class Horde:
             #featureVector = tiles(self.numTilings, self.numTilings * self.numTiles, [(observation/1023) * self.numTiles])
             for i in range(0, len(self.demons)):
                 self.demons[i].learn(self.previousState, self.previousAction, featureVector, jsonObservation)
-                self.verifiers[i].append(self.demons[i].gamma(featureVector, jsonObservation), self.demons[i].cumulant(featureVector, jsonObservation), self.demons[i].prediction(featureVector), jsonObservation)
+                if (len(self.verifiers) > i):
+                    self.verifiers[i].append(self.demons[i].gamma(featureVector, jsonObservation), self.demons[i].cumulant(featureVector, jsonObservation), self.demons[i].prediction(featureVector), jsonObservation)
 
             self.previousState = featureVector
             self.previousAction = action

@@ -11,8 +11,8 @@ class BehaviorPolicy:
         self.i = 0
 
     def policy(self):
-        #return self.randomPolicy()
-        return self.backAndForthPolicy()
+        return self.randomPolicy()
+        #return self.backAndForthPolicy()
         #return self.fiveRightPolicy()
 
     def randomPolicy(self):
