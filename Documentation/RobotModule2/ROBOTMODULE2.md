@@ -17,18 +17,15 @@ On/Off Policy: On policy
 number of Tiles: 8
 number of Tilings: 8
 state representation: {encoder, speed}
-cumulant time step. Always 1
-alpha (step size) 0.1 / Number of Tilings
-beta NA
-lambda 0.95
-behavior policy If extreme left, move to the extreme right. If extreme right, move to extreme left
-target policy NA (On policy)
-gamma state dependent. 0 if in the right most state (encoder position of 1023). 1
-otherwise.
-rho NA
-update frequency 2 seconds per update. This is slow, but for simplification, we wait until the
-servo pivots to the extreme so we don’t have to deal with intermediate states.
-verifier queue size 3
+cumulant: time step. Always 1
+alpha: (step size) 0.1 / Number of Tilings
+beta: NA
+lambda: 0.95
+behavior policy: If extreme left, move to the extreme right. If extreme right, move to extreme left
+target policy: NA (On policy)
+gamma: state dependent. 0 if in the right most state (encoder position of 1023). 1 otherwise.
+rho: NA
+update frequency: 2 seconds per update. This is slow, but for simplification, we wait until the servo pivots to the extreme so we don’t have to deal with intermediate states. verifier queue size 3
 
 ###Results.
 As can be seen by the graph below, the algorithm quickly approximates the correct values, as confirmed by the verifier. When the servo is already at the extreme right, it is 2 steps away from returning there. When it’s on the extreme left, it’s just one step away from returning.
@@ -45,22 +42,20 @@ The question above regarding how many more time intervals to get to a destinatio
 - we introduced a random policy. The policy would most often repeat its previous action, but often take one randomly.- We increased the update frequency to 0.2. Meaning that 5 times per second the robot could potentially change directions, and learn from it. This meant that the state space grew to a near continuous space, instead of the tabular case.
 - The question we asked was no longer “how long until we get there given our current policy?”, but instead “how long until we get there if I were to go straight there?”
 
-On/Off Policy Off policy
-number of Tiles 8
-number of Tilings 8
-state representation {encoder, speed}
-cumulant time. Always 1
-alpha (step size) 0.1 / Number of Tilings
-beta 0.1 * alpha
-lambda 0.95
-behavior policy actions: {continually move left, continually move right}. policy: {60% - repeat
-previous action, 40% - pick action randomly}
-target policy Always move right
-gamma state dependent. 0 if in the right most state (encoder position of 1023). 1
-otherwise.
-rho 1 if action was right. 0 otherwise.
-update frequency 0.5 seconds per update.
-verifier queue size NA
+On/Off Policy: Off policy
+number of Tiles: 8
+number of Tilings: 8
+state representation: {encoder, speed}
+cumulant: time. Always 1
+alpha: (step size) 0.1 / Number of Tilings
+beta: 0.1 * alpha
+lambda: 0.95
+behavior policy: actions: {continually move left, continually move right}. policy: {60% - repeat previous action, 40% - pick action randomly}
+target policy: Always move right
+gamma: state dependent. 0 if in the right most state (encoder position of 1023). 1 otherwise.
+rho: 1 if action was right. 0 otherwise.
+update frequency: 0.5 seconds per update.
+verifier queue size: NA
 
 ###Results:
 Measuring whether our algorithm was performant or not is tricky for this off-policy question since the verifier can not use prior experience to naively estimate actual return. So we used our own intuition to see whether the algorithm was correct. For testing purposes, I set the dynamixels position to the extreme right, and changed the behavior policy to move right at each step. Doing so, I was able to measure that from that position, it took 3 time steps to get to the extreme right. Therefore, it is known that the range of “true” prediction values is between 3 (at the extreme left) and 1 (at the extreme right). We should be able to see the learning algorithm converge to this. As seen in the graph below, the predictions do indeed stay within these bounds. Along with the predicted return is the normalized current encoder position being predicted. A high value encoder position indicates that it’s close to the extreme right, so the prediction should be low. A low current position indicates it is close to the extreme left, so the prediction should be high. This is what we see in the graph.Load
@@ -73,25 +68,19 @@ Measuring whether our algorithm was performant or not is tricky for this off-pol
 ##Question 3: “How much load can I expect at any position?”
 Rather than predicting “how long,” we looked to predict the amount of future load that our robot would experience at any given state. To make this interesting, I wrapped an elastic band around the robots limb in such a way that the load would increase and decrease depending on where it was located. Our policy was to basically oscillate back and forth between extreme left and extreme right. But unlike the first question above, the update frequency was high, such that the agent experienced several states between the two extremes.On/Off Policy On policy
 
-![Banded Robot](Images/RobotElastic.png)
-Variable | Value |
---- | --- | ---
-Number of tilings | 8
-Number of tiles | 8
-|---|---|
-
-| Number of Tiles  |8   |
-|Number of tilings   |8   |
-|state space   |{encoder, speed}   |
-|cumulant   | load  |
-|alpha   | 0.1 / Number of Tilings  |
-|beta   |  0.1 * alpha |
-|lambda   |  0.95 |
-|behavior policy   |  {continually move left, continually move right}. policy: {continue to move left if not at extreme left, continue to move right if not at extreme left}  |
-|target policy   | NA  |
-|gamma   | 0.5. Therefore, this translates into a 2 time step prediction about load.  |
-|rho   | 1 if action was right. 0 otherwise.  |
-|verifier queue size   | 50  |
+On/Off Policy: On Policy
+Number of Tiles: 8
+Number of tilings: 8
+state space: {encoder, speed}
+cumulant: load
+alpha: 0.1 / Number of Tilings
+beta:  0.1 * alpha
+lambda:  0.95
+behavior policy: {continually move left, continually move right}. policy: {continue to move left if not at extreme left, continue to move right if not at extreme left}  |
+target policy: NA
+gamma: 0.5. Therefore, this translates into a 2 time step prediction about load.
+rho: 1 if action was right. 0 otherwise.
+verifier queue size:50
 
 ##Results:
 Because this was on policy, we were able to use our verifier to measure actual load vs.
