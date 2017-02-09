@@ -74,8 +74,12 @@ Measuring whether our algorithm was performant or not is tricky for this off-pol
 Rather than predicting “how long,” we looked to predict the amount of future load that our robot would experience at any given state. To make this interesting, I wrapped an elastic band around the robots limb in such a way that the load would increase and decrease depending on where it was located. Our policy was to basically oscillate back and forth between extreme left and extreme right. But unlike the first question above, the update frequency was high, such that the agent experienced several states between the two extremes.On/Off Policy On policy
 
 ![Banded Robot](Images/RobotElastic.png)
-|   |   |
+Variable | Value |
+--- | --- | ---
+Number of tilings | 8
+Number of tiles | 8
 |---|---|
+
 | Number of Tiles  |8   |
 |Number of tilings   |8   |
 |state space   |{encoder, speed}   |
