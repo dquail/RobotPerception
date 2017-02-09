@@ -74,32 +74,30 @@ Measuring whether our algorithm was performant or not is tricky for this off-pol
 Rather than predicting “how long,” we looked to predict the amount of future load that our robot would experience at any given state. To make this interesting, I wrapped an elastic band around the robots limb in such a way that the load would increase and decrease depending on where it was located. Our policy was to basically oscillate back and forth between extreme left and extreme right. But unlike the first question above, the update frequency was high, such that the agent experienced several states between the two extremes.On/Off Policy On policy
 
 ![Banded Robot](Images/RobotElastic.png)
+|   |   |
+|---|---|
+| Number of Tiles  |8   |
+|Number of tilings   |8   |
+|state space   |{encoder, speed}   |
+|cumulant   | load  |
+|alpha   | 0.1 / Number of Tilings  |
+|beta   |  0.1 * alpha |
+|lambda   |  0.95 |
+|behavior policy   |  {continually move left, continually move right}. policy: {continue to move left if not at extreme left, continue to move right if not at extreme left}  |
+|target policy   | NA  |
+|gamma   | 0.5. Therefore, this translates into a 2 time step prediction about load.  |
+|rho   | 1 if action was right. 0 otherwise.  |
+|verifier queue size   | 50  |
 
-Number of Tiles 8
-Number of Tilings 8
-state space: {encoder, speed}
-cumulant: load
-alpha (step size) 0.1 / Number of Tilings
-beta 0.1 * alpha
-lambda 0.95
-behavior policy actions: {continually move left, continually move right}. policy: {continue to
-move left if not at extreme left, continue to move right if not at extreme left}
-target policy NA
-gamma 0.5. Therefore, this translates into a 2 time step prediction about load.
-rho 1 if action was right. 0 otherwise.
-update frequency 0.2 seconds per update. This is quite fast, and allows our agent to experience
-much of the state space between the extremes.
-verifier queue size 50
-Results:
+##Results:
 Because this was on policy, we were able to use our verifier to measure actual load vs.
 predicted load. As per the graph, our predictions seem to converge closely with the actual load.
-Actual number of steps
 
-![Load deterministic](Grahps/PredictedLoad/LoadDeterministicPolicy.png)
+![Load deterministic](Graphs/PredictedLoad/LoadDeterministicPolicy.png)
 
 I also ran an an experiment where the behavior was random. The predictions made weren't quite as accurate, but seemed to be doing a reasonable job. I didn’t spend much time tuning the parameters.
 
-![Load random](Grahps/PredictedLoad/LoadRandomPolicy.png)
+![Load random](Graphs/PredictedLoad/LoadRandomPolicy.png)
 
 Lessons learned:
 - State conflation. I originally only had the current encoder position included in the state. But this conflated two different states into one. The direction the servos was rotating would have a big impact on the measured load. ie. if you’re lifting a stone vs. letting it pull you down. But yet, those two states collapsed into one, making the predictions an average of the two. Adding speed (which is negative for one direction, positive for the other) resolved this.
@@ -107,4 +105,3 @@ Lessons learned:
 - Our policy is such that there ranges of states that are rarely experienced. Therefore, when they are, perhaps the value predicted is inaccurate. We could test this by increasing the number of updates per second.
 - The rubber band was actually starting to shift around a little as it moved in a stochastic way. So perhaps there was some noise in the actual cumulants being received. I could test this by harnessing my servos with a more permanent setup than an elastic hair elastic.
 - After the predictions stabilized, I wanted to see how quickly my algorithm would adapt if I changed the environment. So I literally grabbed the servo and provided manual resistance. It was only for about 10 seconds, the actual returns clearly changed, and it appeared my predictions slowly started to adapt. But then the servos literally shut down. Perhaps I overheated them. I would have liked to have performed similar experiments with a more consistent dynamic environmentParameter tuning: In the process of getting these predictions, we “experimented” with parameters, only in such a way to get the algorithms to converge. Number of tiles, number of tilings, alpha, beta, gamma, and rho were all different values before being set to the values seen in the above charts. However, we didn’t so much “tune” these parameters in an attempt to achieve algorithmic precision or faster convergence.
-    
