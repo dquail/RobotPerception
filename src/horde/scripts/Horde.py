@@ -30,6 +30,8 @@ from diagnostic_msgs.msg import KeyValue
 from dynamixel_msgs.msg import MotorState
 from dynamixel_msgs.msg import MotorStateList
 
+from horde.msg import StateRepresentation
+
 from BehaviorPolicy import *
 from TDLambda import *
 from TileCoder import *
@@ -91,10 +93,17 @@ class Horde:
     def receiveObservationCallback(self, data):
         #TODO - Terrible conversion from Int16 to int. Need to fix this.
         print("Horde received data: " + str(data))
+        """
+        #old way to extract
         jsonObservation= json.loads(data.data)
         encoderPosition = jsonObservation['encoder']
         speed = jsonObservation['speed']
         load = jsonObservation['load']
+        """
+
+        encoderPosition = data.encoder
+        speed = data.speed
+        load = data.load
 
         if len(self.previousState) == 0:
             #We can't learn unless we have an initial state.
@@ -136,7 +145,7 @@ class Horde:
         rospy.init_node('horde', anonymous=True)
         # Subscribe to all of the relevent sensor information. To start, we're only interested in motor_states, produced by the dynamixels
         #rospy.Subscriber("observation_manager/servo_position", Int16, self.receiveObservationCallback)
-        rospy.Subscriber("observation_manager/observation", String, self.receiveObservationCallback)
+        rospy.Subscriber("observation_manager/observation", StateRepresentation, self.receiveObservationCallback)
 
         rospy.spin()
 

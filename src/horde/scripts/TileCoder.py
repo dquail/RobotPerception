@@ -11,15 +11,26 @@ def tileCode(numTilings, vectorLength, value):
         featureVector[idx] = 1
     return featureVector
 
-"""
+class TileCoder(object):
 
-def tileCode(observation):
-    #Very simple implementation taking the state (measured as the encoder position and returning a vector
+    numberOfTiles = 8
+    numberOfTilings = 8
 
-    featureVector = numpy.zeros(103)
-    idx = observation / 10
-    featureVector[idx] = 1
+    @staticmethod
+    def getIndexes(numTilings, vectorLength, value):
+        indexes = tiles(numTilings, vectorLength, value)
+        return indexes, vectorLength
 
-    return featureVector
+    @staticmethod
+    def getVectorFromIndexes(indexes, vectorLength):
+        featureVector = numpy.zeros(vectorLength)
+        for idx in indexes:
+            featureVector[idx] = 1
+        return featureVector
 
-"""
+    @staticmethod
+    def getFeatureVectorFromValues(value, numTilings = numberOfTilings, numTiles = numberOfTiles):
+        vectorLength = numTilings * numpy.power(numTiles, len(value))
+        indexes, l = TileCoder.getIndexes(numTilings, vectorLength, value)
+        featureVector = TileCoder.getVectorFromIndexes(indexes, vectorLength)
+        return featureVector

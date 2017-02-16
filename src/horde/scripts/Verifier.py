@@ -3,6 +3,7 @@ import rospy
 from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from std_msgs.msg import String
+from horde.msg import StateRepresentation
 
 class Verifier:
     def __init__(self, bufferLength):
@@ -12,10 +13,10 @@ class Verifier:
         self.predictions = []
         self.observations = []
 
-    def append(self, gamma, cumulant, prediction, observation):
-        encoder_position = observation['encoder']
-        speed = observation['speed']
-        load = observation['load']
+    def append(self, gamma, cumulant, prediction, newState):
+        encoder_position = newState.encoder
+        speed = newState
+        load = newState.load
 
 
         print("Verify append with observation: " + str(encoder_position) + ", speed: " + str(speed) + ", load: " + str(load) + ", gamma: " + str(gamma) + ", cumulant: " + str(cumulant) + ", prediction: " + str(prediction))

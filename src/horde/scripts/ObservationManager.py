@@ -24,6 +24,8 @@ import yaml
 
 from std_msgs.msg import String
 from std_msgs.msg import Int16
+from horde.msg import StateRepresentation
+
 
 from dynamixel_driver.dynamixel_const import *
 
@@ -34,6 +36,8 @@ from diagnostic_msgs.msg import KeyValue
 from dynamixel_msgs.msg import MotorState
 from dynamixel_msgs.msg import MotorStateList
 
+from TileCoder import *
+
 """
 sets up the subscribers and starts to broadcast the results in a thread every 0.1 seconds
 """
@@ -42,73 +46,88 @@ class ObservationManager:
 
     def __init__(self):
         self.publishingFrequency = 0.5 #Seconds between updates
+
         #Initialize the sensory values of interest
         self.motoEncoder = 0
-        self.speed = 0
-        self.load = 0
+        self.maxEncoder = 1023.0
+        self.minEncoder = 510.0
 
-    # Sensor callbacks
+        self.speed = 0
+        self.maxSpeed = 200.0
+        self.minSpeed = -200.0
+
+        self.load = 0
+        self.timestamp = 0
+
+        self.lastX = [0.0] * TileCoder.numberOfTiles * TileCoder.numberOfTilings * TileCoder.numberOfTilings
+
+    """
+    motorStatesCallback(self, data)
+    Dynamixel callback
+    Data of format:
+
+    motor_states:
+  -
+        timestamp: 1485931061.8
+        id: 2
+        goal: 805
+        position: 805
+        error: 0
+        speed: 0
+        load: 0.0
+        voltage: 12.3
+        temperature: 32
+        moving: False
+      -
+        timestamp: 1485931061.8
+        id: 3
+        goal: 603
+        position: 603
+        error: 0
+        speed: 0
+        load: 0.0
+        voltage: 12.3
+        temperature: 34
+        moving: False
+
+    """
     def motorStatesCallback(self, data):
         print("In observation_manager callback")
 
         self.motoEncoder = data.motor_states[0].position
         self.speed = data.motor_states[0].speed
         self.load = data.motor_states[0].load
+        self.timestamp = data.motor_states[0].timestamp
 
     def publishObservation(self):
-        print("In publishObservation with value of publishing: " + str(self.motoEncoder))
-        # Test republishing the message for plotting purposes
+        print("In publish observation")
+        pubObservation = rospy.Publisher('observation_manager/state_update', StateRepresentation, queue_size = 10)
+        msg = StateRepresentation()
+        msg.speed = self.speed
+        msg.encoder = self.motoEncoder
+        msg.load = self.load
+        msg.timestamp = self.timestamp
 
-        pubObservation = rospy.Publisher('observation_manager/observation', String, queue_size = 10)
-        msgJSON = '{"encoder":' + str(self.motoEncoder) + ', "speed":' + str(self.speed) + ', "load":' + str(self.load) + '}'
-        msg = String()
-        msg.data = msgJSON
+        #Create the feature vector
+        featureVector = TileCoder.getFeatureVectorFromValues([((self.motoEncoder- self.minEncoder)/(self.maxEncoder-self.minEncoder)) * TileCoder.numberOfTiles, ((self.speed + self.maxSpeed) / (self.maxSpeed - self.minSpeed)) * TileCoder.numberOfTiles])
+        msg.lastX = self.lastX
+        msg.X = featureVector
+
+        self.lastX = featureVector
+
         pubObservation.publish(msg)
 
-        pub = rospy.Publisher('observation_manager/servo_position', Int16, queue_size=10)
-        pub.publish(self.motoEncoder)
-        #pub = rospy.Publisher('observation_manager_observation/moto_encoder', Int16, queue_size=10)
-        #pub.publish(self.motoEncoder)
         threading.Timer(self.publishingFrequency, self.publishObservation).start()
 
     def start(self):
-        print("In listener")
         rospy.init_node('observation_manager', anonymous=True)
         # Subscribe to all of the relevent sensor information. To start, we're only interested in motor_states, produced by the dynamixels
         rospy.Subscriber("motor_states/pan_tilt_port", MotorStateList, self.motorStatesCallback)
 
         self.publishObservation()
 
-        #rospy.spin()
-
-
 if __name__ == '__main__':
     manager = ObservationManager()
     manager.start()
 
 
-"""
-motor_states:
-  -
-    timestamp: 1485931061.8
-    id: 2
-    goal: 805
-    position: 805
-    error: 0
-    speed: 0
-    load: 0.0
-    voltage: 12.3
-    temperature: 32
-    moving: False
-  -
-    timestamp: 1485931061.8
-    id: 3
-    goal: 603
-    position: 603
-    error: 0
-    speed: 0
-    load: 0.0
-    voltage: 12.3
-    temperature: 34
-    moving: False
-"""

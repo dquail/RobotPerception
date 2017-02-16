@@ -24,7 +24,7 @@ rostopic pub /tilt_controller/command std_msgs/Float64 -- 1.5
 rosrun horde ObservationManager.py
 
 7. Make sure that you can see it publishing data:
-$rostopic echo /observation_manager/servo_positions
+$rostopic echo /observation_manager/state_update
 
 
 8. Start horde
