@@ -14,8 +14,8 @@ class BehaviorPolicy:
 
     def policy(self, state):
         #return self.randomPolicy(state)
-        #return self.backAndForthPolicy(state)
-        return self.fiveRightPolicy(state)
+        return self.backAndForthPolicy(state)
+        #return self.fiveRightPolicy(state)
 
     def randomPolicy(self, state):
         if (randint(0,9) < 3):

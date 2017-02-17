@@ -15,7 +15,7 @@ class Verifier:
 
     def append(self, gamma, cumulant, prediction, newState):
         encoder_position = newState.encoder
-        speed = newState
+        speed = newState.speed
         load = newState.load
 
 

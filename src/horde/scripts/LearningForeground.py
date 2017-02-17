@@ -62,6 +62,12 @@ class LearningForeground:
 
         self.lastAction = 0
 
+        extremeLeftPrediction = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, False)
+        extremeLeftPrediction.gamma = atLeftGamma
+        self.demons.append(extremeLeftPrediction)
+        extremeLeftVerifier = Verifier(4)
+        self.verifiers.append(extremeLeftVerifier)
+
         """
         extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
         extremeLeftVerifier = Verifier(0)
@@ -69,16 +75,11 @@ class LearningForeground:
         self.demons.append(extremeLeftPrediction)
         """
 
+        """
         directLeftPrediction = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1/TileCoder.numberOfTilings, True)
         directLeftPrediction.policy = directLeftPolicy
         directLeftPrediction.gamma = atLeftGamma
         self.demons.append(directLeftPrediction)
-        """
-        directLeftPrediction = DirectStepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
-        self.demons.append(directLeftPrediction)
-        #Nothing can really be learned from off policy verifiers
-        #directLeftVerifier = Verifier(50)
-        #self.verifiers.append(directLeftVerifier)
         """
 
         """
@@ -105,26 +106,22 @@ class LearningForeground:
         self.lastAction = action
 
     def updateDemons(self, newState):
-        #print("LearningForeground received stateRepresentation: " + str(newState))
+        print("LearningForeground received stateRepresentation encoder: " + str(newState.encoder))
 
         encoderPosition = newState.encoder
         speed = newState.speed
         load = newState.load
 
-        if not self.previousState:
-            #We can't learn unless we have an initial state.
-            self.previousState = newState
-        else:
-            action  = self.behaviorPolicy.policy(newState)
-
-            self.performAction(action)
-
+        if self.previousState:
             #Learning
             for i in range(0, len(self.demons)):
                 self.demons[i].learn(self.previousState, self.lastAction, newState)
                 if (len(self.verifiers) > i):
-                    self.verifiers[i].append(self.demons[i].gamma(newState), self.demons[i].cumulant(newState), self.demons[i].prediction(newState))
+                    self.verifiers[i].append(self.demons[i].gamma(newState), self.demons[i].cumulant(newState), self.demons[i].prediction(newState), newState)
 
+            action  = self.behaviorPolicy.policy(newState)
+
+            self.performAction(action)
 
     def publishPredictions(self):
         print("Publishing predictions")

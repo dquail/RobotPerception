@@ -51,9 +51,9 @@ class GVF:
 
         print("")
         print("!!!!! LEARN  !!!!!!!")
-        print("For " + str(lastState.encoder) + " to " + str(newState.encoder))
+        print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
         pred = self.prediction(lastState)
-        print("--- Prediction before learning: " + str(pred))
+        print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
         print("alpha: " + str(self.alpha))
         #print("lastState: " )
         #print(lastState)
@@ -102,7 +102,7 @@ class GVF:
         #print(self.weights)
 
         pred = self.prediction(lastState)
-        print("Prediction after learning: " + str(pred))
+        print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
 
 
         self.gammaLast = gammaNext
@@ -117,11 +117,11 @@ class GVF:
 
 
     def tdLearn(self, lastState, action, newState):
-        print("")
         print("!!!!! LEARN  !!!!!!!")
-        print("For " + str(lastState.encoder) + " to " + str(newState.encoder))
+        print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
         pred = self.prediction(lastState)
-        print("--- Prediction before learning: " + str(pred))
+        print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
+
         print("alpha: " + str(self.alpha))
         #print("lastState: " )
         #print(lastState)
@@ -129,7 +129,7 @@ class GVF:
         print(action)
         #print("NewState")
         #print(newState)
-        print("New State:" + str(newState))
+        #print("New State:" + str(newState))
         #print("Weights before:")
         #print(self.weights)
         zNext = self.cumulant(newState)
@@ -156,7 +156,8 @@ class GVF:
         #print("wEights after: ")
         #print(self.weights)
         pred = self.prediction(lastState)
-        print("---Prediction after learning: " + str(pred))
+        print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
+
         self.gammaLast = gammaNext
 
     def prediction(self, stateRepresentation):
