@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a0d885d6-9bf6-457f-9899-b7cbc234650b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" afterPath="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" afterPath="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/GVF.py" afterPath="$PROJECT_DIR$/src/horde/scripts/GVF.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" afterPath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" afterPath="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/Verifier.py" afterPath="$PROJECT_DIR$/src/horde/scripts/Verifier.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -25,7 +20,7 @@
       <file leaf-file-name="GVF.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
+            <state relative-caret-position="2265">
               <caret line="151" column="8" lean-forward="true" selection-start-line="151" selection-start-column="8" selection-end-line="151" selection-end-column="8" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -34,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="114" column="30" lean-forward="true" selection-start-line="114" selection-start-column="30" selection-end-line="114" selection-end-column="30" />
+            <state relative-caret-position="232">
+              <caret line="120" column="41" lean-forward="true" selection-start-line="120" selection-start-column="41" selection-end-line="120" selection-end-column="41" />
               <folding>
                 <element signature="e#205#217#0" expanded="true" />
               </folding>
@@ -46,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Verifier.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Verifier.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-308">
-              <caret line="21" column="98" lean-forward="false" selection-start-line="21" selection-start-column="93" selection-end-line="21" selection-end-column="98" />
+            <state relative-caret-position="855">
+              <caret line="57" column="47" lean-forward="false" selection-start-line="57" selection-start-column="47" selection-end-line="57" selection-end-column="47" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -100,10 +95,10 @@
       <find>previousState</find>
       <find>numpy.array</find>
       <find>self.lastAction</find>
-      <find>lastState</find>
-      <find>self.previous</find>
       <find>newState</find>
       <find>speed</find>
+      <find>self.previous</find>
+      <find>lastState</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -146,8 +141,8 @@
         <option value="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" />
         <option value="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" />
         <option value="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" />
-        <option value="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/Verifier.py" />
+        <option value="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
       </list>
     </option>
   </component>
@@ -898,9 +893,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="57" column="47" lean-forward="false" selection-start-line="57" selection-start-column="47" selection-end-line="57" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
+        <state relative-caret-position="2265">
           <caret line="151" column="8" lean-forward="true" selection-start-line="151" selection-start-column="8" selection-end-line="151" selection-end-column="8" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -910,20 +915,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="114" column="30" lean-forward="true" selection-start-line="114" selection-start-column="30" selection-end-line="114" selection-end-column="30" />
+        <state relative-caret-position="232">
+          <caret line="120" column="41" lean-forward="true" selection-start-line="120" selection-start-column="41" selection-end-line="120" selection-end-column="41" />
           <folding>
             <element signature="e#205#217#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-308">
-          <caret line="21" column="98" lean-forward="false" selection-start-line="21" selection-start-column="93" selection-end-line="21" selection-end-column="98" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -56,7 +56,7 @@ class LearningForeground:
 
     def __init__(self):
         self.demons = []
-        self.verifiers = []
+        self.verifiers = {}
 
         self.behaviorPolicy = BehaviorPolicy()
 
@@ -66,7 +66,8 @@ class LearningForeground:
         extremeLeftPrediction.gamma = atLeftGamma
         self.demons.append(extremeLeftPrediction)
         extremeLeftVerifier = Verifier(4)
-        self.verifiers.append(extremeLeftVerifier)
+
+        self.verifiers[extremeLeftPrediction] = extremeLeftVerifier
 
         """
         extremeLeftPrediction = StepsToLeftDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
@@ -114,10 +115,10 @@ class LearningForeground:
 
         if self.previousState:
             #Learning
-            for i in range(0, len(self.demons)):
-                self.demons[i].learn(self.previousState, self.lastAction, newState)
-                if (len(self.verifiers) > i):
-                    self.verifiers[i].append(self.demons[i].gamma(newState), self.demons[i].cumulant(newState), self.demons[i].prediction(newState), newState)
+            for demon in self.demons:
+                demon.learn(self.previousState, self.lastAction, newState)
+                if demon in self.verifiers:
+                    self.verifiers[demon].append(demon.gamma(newState), demon.cumulant(newState), demon.prediction(newState), newState)
 
             action  = self.behaviorPolicy.policy(newState)
 
