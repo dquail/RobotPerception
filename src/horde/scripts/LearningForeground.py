@@ -65,7 +65,7 @@ class LearningForeground:
         extremeLeftPrediction = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, False)
         extremeLeftPrediction.gamma = atLeftGamma
         self.demons.append(extremeLeftPrediction)
-        extremeLeftVerifier = Verifier(4)
+        extremeLeftVerifier = Verifier(4, 'StepsToExtremeLeft')
 
         self.verifiers[extremeLeftPrediction] = extremeLeftVerifier
 

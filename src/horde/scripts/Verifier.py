@@ -6,8 +6,9 @@ from std_msgs.msg import String
 from horde.msg import StateRepresentation
 
 class Verifier:
-    def __init__(self, bufferLength):
+    def __init__(self, bufferLength, name):
         self.bufferLength = bufferLength
+        self.name = name
         self.gammas = []
         self.cumulants = []
         self.predictions = []
@@ -51,26 +52,16 @@ class Verifier:
         #print("--- Actual: " + str(runningCumulant))
 
         #Publish the values
-        pubVerifierStep = rospy.Publisher('horde_verifier/verifier_step', String, queue_size=10)
-        msg = String()
 
-
-        msgJSON = '{"prediction":' + str(self.predictions[0]) + ', "cumulant":' + str(self.cumulants[0]) + ', "actual":' + str(runningCumulant) + ', "observation":' + str(self.observations[0]) + '}'
-        print("Publishng verification: " + str(msgJSON))
-        msg.data = msgJSON
-        pubVerifierStep.publish(msg)
-
-
-        pubVerifierStep.publish(msg)
-        pubPrediction = rospy.Publisher('horde_verifier/predicted', Float64, queue_size=10)
+        pubPrediction = rospy.Publisher('horde_verifier/' + self.name + '/predicted', Float64, queue_size=10)
         pubPrediction.publish(self.predictions[0])
 
-        pubActual = rospy.Publisher('horde_verifier/actual', Float64, queue_size=10)
+        pubActual = rospy.Publisher('horde_verifier/' + self.name + '/actual', Float64, queue_size=10)
         pubActual.publish(runningCumulant)
 
-        pubError = rospy.Publisher('horde_verifier/error', Float64, queue_size=10)
+        pubError = rospy.Publisher('horde_verifier/' + self.name + '/error', Float64, queue_size=10)
         pubError.publish(self.predictions[0] - runningCumulant)
 
-        pubObs = rospy.Publisher('horde_verifier/observation', Int16, queue_size=10)
+        pubObs = rospy.Publisher('horde_verifier/' + self.name + '/encoder_position', Int16, queue_size=10)
         pubObs.publish(self.observations[0] / 100)
 

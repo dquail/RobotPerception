@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a0d885d6-9bf6-457f-9899-b7cbc234650b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" afterPath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/Verifier.py" afterPath="$PROJECT_DIR$/src/horde/scripts/Verifier.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,8 +33,8 @@
       <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="120" column="41" lean-forward="true" selection-start-line="120" selection-start-column="41" selection-end-line="120" selection-end-column="41" />
+            <state relative-caret-position="202">
+              <caret line="67" column="61" lean-forward="false" selection-start-line="67" selection-start-column="61" selection-end-line="67" selection-end-column="61" />
               <folding>
                 <element signature="e#205#217#0" expanded="true" />
               </folding>
@@ -44,8 +45,8 @@
       <file leaf-file-name="Verifier.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="855">
-              <caret line="57" column="47" lean-forward="false" selection-start-line="57" selection-start-column="47" selection-end-line="57" selection-end-column="47" />
+            <state relative-caret-position="413">
+              <caret line="64" column="83" lean-forward="false" selection-start-line="64" selection-start-column="83" selection-end-line="64" selection-end-column="83" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -96,9 +97,9 @@
       <find>numpy.array</find>
       <find>self.lastAction</find>
       <find>newState</find>
-      <find>speed</find>
-      <find>self.previous</find>
       <find>lastState</find>
+      <find>self.previous</find>
+      <find>speed</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -893,16 +894,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="57" column="47" lean-forward="false" selection-start-line="57" selection-start-column="47" selection-end-line="57" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2265">
@@ -913,10 +904,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="64" column="83" lean-forward="false" selection-start-line="64" selection-start-column="83" selection-end-line="64" selection-end-column="83" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="120" column="41" lean-forward="true" selection-start-line="120" selection-start-column="41" selection-end-line="120" selection-end-column="41" />
+        <state relative-caret-position="202">
+          <caret line="67" column="61" lean-forward="false" selection-start-line="67" selection-start-column="61" selection-end-line="67" selection-end-column="61" />
           <folding>
             <element signature="e#205#217#0" expanded="true" />
           </folding>
