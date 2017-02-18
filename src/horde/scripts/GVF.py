@@ -4,8 +4,9 @@ from std_msgs.msg import Float64
 from horde.msg import StateRepresentation
 
 class GVF:
-    def __init__(self, featureVectorLength, alpha, isOffPolicy):
+    def __init__(self, featureVectorLength, alpha, isOffPolicy, name = "GVF name"):
         #set up lambda, gamma, etc.
+        self.name = name
         self.isOffPolicy = isOffPolicy
         self.numberOfFeatures = featureVectorLength
         self.lastState = 0
@@ -51,6 +52,7 @@ class GVF:
 
         print("")
         print("!!!!! LEARN  !!!!!!!")
+        print("GVF name: " + str(self.name))
         print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
         pred = self.prediction(lastState)
         print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
@@ -108,16 +110,17 @@ class GVF:
         self.gammaLast = gammaNext
 
         if (lastState):
-            pubPrediction = rospy.Publisher('horde_verifier/GTDpredictedValue', Float64, queue_size=10)
+            pubPrediction = rospy.Publisher('horde_verifier/' + self.name + 'Prediction', Float64, queue_size=10)
             pubPrediction.publish(pred)
-            pubObs = rospy.Publisher('horde_verifier/NormalizedEncoderPosition', Float64, queue_size=10)
-            normalizedObs = 3.0 * (lastState.encoder - 510.0) / (1023.0-510.0)
-            pubObs.publish(normalizedObs )
+            #pubObs = rospy.Publisher('horde_verifier/NormalizedEncoderPosition', Float64, queue_size=10)
+            #normalizedObs = 3.0 * (lastState.encoder - 510.0) / (1023.0-510.0)
+            #pubObs.publish(normalizedObs )
 
 
 
     def tdLearn(self, lastState, action, newState):
         print("!!!!! LEARN  !!!!!!!")
+        print("GVF name: " + str(self.name))
         print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
         pred = self.prediction(lastState)
         print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
@@ -159,6 +162,10 @@ class GVF:
         print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
 
         self.gammaLast = gammaNext
+
+        if (lastState):
+            pubPrediction = rospy.Publisher('horde_verifier/' + self.name + 'Prediction', Float64, queue_size=10)
+            pubPrediction.publish(pred)
 
     def prediction(self, stateRepresentation):
         return numpy.inner(self.weights, stateRepresentation.X)

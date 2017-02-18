@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a0d885d6-9bf6-457f-9899-b7cbc234650b" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/horde/scripts/Horde.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/horde/scripts/StepsToLeftDemon.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" afterPath="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" afterPath="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/GVF.py" afterPath="$PROJECT_DIR$/src/horde/scripts/GVF.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" afterPath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/Verifier.py" afterPath="$PROJECT_DIR$/src/horde/scripts/Verifier.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" afterPath="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,8 +27,8 @@
       <file leaf-file-name="GVF.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2265">
-              <caret line="151" column="8" lean-forward="true" selection-start-line="151" selection-start-column="8" selection-end-line="151" selection-end-column="8" />
+            <state relative-caret-position="1740">
+              <caret line="164" column="0" lean-forward="true" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -33,8 +39,8 @@
       <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="67" column="61" lean-forward="false" selection-start-line="67" selection-start-column="61" selection-end-line="67" selection-end-column="61" />
+            <state relative-caret-position="435">
+              <caret line="72" column="13" lean-forward="true" selection-start-line="72" selection-start-column="13" selection-end-line="72" selection-end-column="13" />
               <folding>
                 <element signature="e#205#217#0" expanded="true" />
               </folding>
@@ -42,10 +48,42 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="ObservationManager.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/horde/scripts/ObservationManager.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="202">
+              <caret line="54" column="16" lean-forward="true" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
+              <folding>
+                <element signature="e#787#799#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PredictLoadDemon.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/horde/scripts/PredictLoadDemon.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="18" lean-forward="false" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="controller_manager.launch" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Verifier.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
+            <state relative-caret-position="960">
               <caret line="64" column="83" lean-forward="false" selection-start-line="64" selection-start-column="83" selection-end-line="64" selection-end-column="83" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -57,7 +95,7 @@
       <file leaf-file-name="BehaviorPolicy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
+            <state relative-caret-position="-30">
               <caret line="16" column="8" lean-forward="false" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
@@ -70,7 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>horde_verifier/predicted</find>
       <find>learn(</find>
       <find>init_node</find>
       <find>cumulant</find>
@@ -98,8 +135,9 @@
       <find>self.lastAction</find>
       <find>newState</find>
       <find>lastState</find>
-      <find>self.previous</find>
       <find>speed</find>
+      <find>self.previous</find>
+      <find>rospy</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -133,23 +171,23 @@
         <option value="$PROJECT_DIR$/src/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/horde/package.xml" />
         <option value="$PROJECT_DIR$/src/horde/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/horde/scripts/Horde.py" />
         <option value="$PROJECT_DIR$/src/horde/msg/Prediction.msg" />
         <option value="$PROJECT_DIR$/src/horde/msg/StateRepresentation.msg" />
         <option value="$PROJECT_DIR$/src/horde/scripts/TileCoder.py" />
         <option value="$PROJECT_DIR$/USAGE.md" />
+        <option value="$PROJECT_DIR$/src/horde/scripts/Verifier.py" />
+        <option value="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" />
+        <option value="$PROJECT_DIR$/src/horde/scripts/Horde.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/GVF.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" />
-        <option value="$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch" />
         <option value="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" />
-        <option value="$PROJECT_DIR$/src/horde/scripts/Verifier.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1958" />
-    <option name="y" value="122" />
+    <option name="x" value="1985" />
+    <option name="y" value="171" />
     <option name="width" value="1825" />
     <option name="height" value="747" />
   </component>
@@ -519,7 +557,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1958" y="122" width="1825" height="747" extended-state="0" />
+    <frame x="1985" y="171" width="1825" height="747" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20328768" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -547,16 +585,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/horde/scripts/Horde.py</url>
-          <line>48</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/horde/scripts/Horde.py</url>
-          <line>82</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/horde/scripts/GTDLambda.py</url>
           <line>18</line>
@@ -626,9 +654,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#376#388#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -782,20 +808,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/PredictLoadDemon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="18" lean-forward="false" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/TileCoder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="36" column="0" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding>
-            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -813,16 +831,6 @@
         <state relative-caret-position="177">
           <caret line="30" column="8" lean-forward="true" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Horde.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-105">
-          <caret line="122" column="4" lean-forward="true" selection-start-line="122" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
-          <folding>
-            <element signature="e#376#388#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -858,24 +866,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/ObservationManager.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="47" column="38" lean-forward="false" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
-          <folding>
-            <element signature="e#787#799#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/GTDLambda.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -884,9 +874,43 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/dynamixels/launch/controller_manager.launch">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Horde.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="36" column="23" lean-forward="false" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="64" column="83" lean-forward="false" selection-start-line="64" selection-start-column="83" selection-end-line="64" selection-end-column="83" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/PredictLoadDemon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="18" lean-forward="false" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
+        <state relative-caret-position="-30">
           <caret line="16" column="8" lean-forward="false" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
@@ -894,20 +918,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/ObservationManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2265">
-          <caret line="151" column="8" lean-forward="true" selection-start-line="151" selection-start-column="8" selection-end-line="151" selection-end-column="8" />
+        <state relative-caret-position="202">
+          <caret line="54" column="16" lean-forward="true" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
           <folding>
-            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#787#799#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/Verifier.py">
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="64" column="83" lean-forward="false" selection-start-line="64" selection-start-column="83" selection-end-line="64" selection-end-column="83" />
+        <state relative-caret-position="1740">
+          <caret line="164" column="0" lean-forward="true" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
@@ -916,8 +940,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="67" column="61" lean-forward="false" selection-start-line="67" selection-start-column="61" selection-end-line="67" selection-end-column="61" />
+        <state relative-caret-position="435">
+          <caret line="72" column="13" lean-forward="true" selection-start-line="72" selection-start-column="13" selection-end-line="72" selection-end-column="13" />
           <folding>
             <element signature="e#205#217#0" expanded="true" />
           </folding>
