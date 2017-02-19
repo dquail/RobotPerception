@@ -24,6 +24,10 @@ class GVF:
         self.movingtdEligErrorAverage = 0 #average of TD*elig*hHat
         self.lastAction = 0
 
+        self.tdVariance = 0
+        self.averageTD = 0
+        self.i = 1
+
     """
     gamma, cumulant, and policy functions can/should be overiden by the specific instantiation of the GVF based on the intended usage.
     """
@@ -105,7 +109,13 @@ class GVF:
 
         beta = self.betaNot / self.tao
         print("beta: " + str(beta))
-        self.movingtdEligErrorAverage =(1.0 - beta) * self.movingtdEligErrorAverage + beta * tdError * self.eligibilityTrace
+        self.movingtdEligErrorAverage = (1.0 - beta) * self.movingtdEligErrorAverage + beta * tdError * self.eligibilityTrace
+
+        #update UDE
+        oldAverageTD = self.averageTD
+        self.averageTD = (1.0 - beta) * self.averageTD + beta * tdError
+        self.tdVariance = (self.i - 1) * self.tdVariance + (tdError - oldAverageTD) * (tdError - self.averageTD)
+        self.i = self.i + 1
 
         #print("hWeights after:")
         #print(self.hWeights)
@@ -123,6 +133,9 @@ class GVF:
 
         rupee = self.rupee()
         print("Rupee: " + str(rupee))
+
+        ude = self.ude()
+        print("UDE: " + str(ude))
 
         self.gammaLast = gammaNext
 
@@ -186,7 +199,14 @@ class GVF:
         print("beta: " + str(beta))
         self.movingtdEligErrorAverage =(1.0 - beta) * self.movingtdEligErrorAverage + beta * tdError * self.eligibilityTrace
 
+        #update UDE
+        oldAverageTD = self.averageTD
+        self.averageTD = (1.0 - beta) * self.averageTD + beta * tdError
+        self.tdVariance = (self.i - 1) * self.tdVariance + (tdError - oldAverageTD) * (tdError - self.averageTD)
+        self.i = self.i + 1
+
         self.weights = self.weights + self.alpha * tdError * self.eligibilityTrace
+
 
         #print("wEights after: ")
         #print(self.weights)
@@ -195,6 +215,10 @@ class GVF:
         rupee = self.rupee()
 
         print("Rupee: " + str(rupee))
+
+        ude = self.ude()
+        print("UDE: " + str(ude))
+
         self.gammaLast = gammaNext
 
         if (lastState):
@@ -206,3 +230,6 @@ class GVF:
 
     def rupee(self):
         return numpy.sqrt(numpy.absolute(numpy.inner(self.hHatWeights, self.movingtdEligErrorAverage)))
+
+    def ude(self):
+        return numpy.absolute(self.averageTD / numpy.sqrt(self.tdVariance) + 0.001)

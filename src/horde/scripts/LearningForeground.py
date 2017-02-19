@@ -231,18 +231,32 @@ class LearningForeground:
     def publishPredictionsAndErrors(self, state):
         print("Publishing predictions")
         averageRupee = 0
+        averageUDE = 0
         i = 1
         for demon in self.demons:
             pred = demon.prediction(state)
             rupee = demon.rupee()
             averageRupee = averageRupee + (1.0 / i) * (rupee - averageRupee)
+
+            ude = demon.ude()
+            averageUDE = averageUDE + (1.0 / i) * (ude - averageUDE)
+
             i = i + 1
+
             pubPrediction = rospy.Publisher('horde_verifier/' + demon.name + 'Prediction', Float64, queue_size=10)
             pubPrediction.publish(pred)
+
             pubRupee = rospy.Publisher('horde_verifier/' + demon.name + 'Rupee', Float64, queue_size=10)
             pubRupee.publish(rupee)
+
+            pubUDE = rospy.Publisher('horde_verifier/' + demon.name + 'UDE', Float64, queue_size=10)
+            pubUDE.publish(ude)
+
         avgRupee = rospy.Publisher('horde_verifier/AverageRupee', Float64, queue_size=10)
         avgRupee.publish(averageRupee)
+
+        avgUDE = rospy.Publisher('horde_verifier/AverageUDE', Float64, queue_size=10)
+        avgUDE.publish(averageUDE)
 
 
 

@@ -18,11 +18,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GVF.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GVF.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="195" column="0" lean-forward="true" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+            <state relative-caret-position="337">
+              <caret line="205" column="27" lean-forward="false" selection-start-line="205" selection-start-column="27" selection-end-line="205" selection-end-column="27" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -30,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="382">
-              <caret line="244" column="8" lean-forward="false" selection-start-line="244" selection-start-column="8" selection-end-line="244" selection-end-column="8" />
+            <state relative-caret-position="97">
+              <caret line="239" column="0" lean-forward="true" selection-start-line="239" selection-start-column="0" selection-end-line="239" selection-end-column="0" />
               <folding>
                 <element signature="e#205#217#0" expanded="true" />
               </folding>
@@ -102,7 +102,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>jsonData</find>
       <find>Tilecode for</find>
       <find>! LEARN</find>
       <find>cummulant</find>
@@ -130,8 +129,9 @@
       <find>self.previous</find>
       <find>rospy</find>
       <find>self.lam</find>
-      <find>movin</find>
       <find>movingRupee</find>
+      <find>movin</find>
+      <find>movingTD</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -174,8 +174,8 @@
         <option value="$PROJECT_DIR$/src/horde/scripts/Horde.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/BehaviorPolicy.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" />
-        <option value="$PROJECT_DIR$/src/horde/scripts/GVF.py" />
         <option value="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
+        <option value="$PROJECT_DIR$/src/horde/scripts/GVF.py" />
       </list>
     </option>
   </component>
@@ -922,22 +922,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="195" column="0" lean-forward="true" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+        <state relative-caret-position="97">
+          <caret line="239" column="0" lean-forward="true" selection-start-line="239" selection-start-column="0" selection-end-line="239" selection-end-column="0" />
           <folding>
-            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#205#217#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
+    <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="244" column="8" lean-forward="false" selection-start-line="244" selection-start-column="8" selection-end-line="244" selection-end-column="8" />
+        <state relative-caret-position="337">
+          <caret line="205" column="27" lean-forward="false" selection-start-line="205" selection-start-column="27" selection-end-line="205" selection-end-column="27" />
           <folding>
-            <element signature="e#205#217#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
