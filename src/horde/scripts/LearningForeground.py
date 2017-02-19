@@ -103,6 +103,7 @@ def createHowLongUntilLeftGVFs():
     gvfOn.gamma = atLeftGamma
     gvfOn.cumulant = timestepCumulant
 
+    #TODO - Uncomment to lerarn on policy as well
     gvfs.append(gvfOn)
 
     gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name = "HowLongLeftOffPolicy")
@@ -227,8 +228,22 @@ class LearningForeground:
             """
             self.performSlowBackAndForth()
 
-    def publishPredictions(self):
+    def publishPredictionsAndErrors(self, state):
         print("Publishing predictions")
+        averageRupee = 0
+        i = 1
+        for demon in self.demons:
+            pred = demon.prediction(state)
+            rupee = demon.rupee()
+            averageRupee = averageRupee + (1.0 / i) * (rupee - averageRupee)
+            i = i + 1
+            pubPrediction = rospy.Publisher('horde_verifier/' + demon.name + 'Prediction', Float64, queue_size=10)
+            pubPrediction.publish(pred)
+            pubRupee = rospy.Publisher('horde_verifier/' + demon.name + 'Rupee', Float64, queue_size=10)
+            pubRupee.publish(rupee)
+        avgRupee = rospy.Publisher('horde_verifier/AverageRupee', Float64, queue_size=10)
+        avgRupee.publish(averageRupee)
+
 
 
     def receiveStateUpdateCallback(self, newState):
@@ -237,7 +252,10 @@ class LearningForeground:
         newState.X = numpy.array(newState.X)
         newState.lastX = numpy.array(newState.lastX)
         self.updateDemons(newState)
-        self.publishPredictions()
+
+        if self.previousState:
+            self.publishPredictionsAndErrors(self.previousState)
+
         self.previousState = newState
 
     def start(self):

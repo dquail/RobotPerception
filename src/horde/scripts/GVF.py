@@ -13,10 +13,15 @@ class GVF:
         self.lastObservation = 0
         self.weights = numpy.zeros(self.numberOfFeatures)
         self.hWeights = numpy.zeros(featureVectorLength)
+        self.hHatWeights = numpy.zeros(featureVectorLength)
         self.eligibilityTrace = numpy.zeros(self.numberOfFeatures)
         self.gammaLast = 1
 
         self.alpha = alpha
+        self.alphaHat = self.alpha #TODO - Not sure what best to set this at
+        self.betaNot = (1.0 - 0.95) * self.alphaHat / 30
+        self.tao = 0
+        self.movingtdEligErrorAverage = 0 #average of TD*elig*hHat
         self.lastAction = 0
 
     """
@@ -92,6 +97,16 @@ class GVF:
 
         self.hWeights = self.hWeights + self.alpha * 0.1 * (tdError * self.eligibilityTrace - (numpy.inner(self.hWeights, lastState.X)) * lastState.X)
 
+        #update Rupee
+        self.hHatWeights = self.hHatWeights + self.alphaHat * (tdError * self.eligibilityTrace - (numpy.inner(self.hHatWeights, lastState.X)) * lastState.X)
+        print("tao before: " + str(self.tao))
+        self.tao = (1.0 - self.betaNot) * self.tao + self.betaNot
+        print("tao after: " + str(self.tao))
+
+        beta = self.betaNot / self.tao
+        print("beta: " + str(beta))
+        self.movingtdEligErrorAverage =(1.0 - beta) * self.movingtdEligErrorAverage + beta * tdError * self.eligibilityTrace
+
         #print("hWeights after:")
         #print(self.hWeights)
 
@@ -106,16 +121,22 @@ class GVF:
         pred = self.prediction(lastState)
         print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
 
+        rupee = self.rupee()
+        print("Rupee: " + str(rupee))
 
         self.gammaLast = gammaNext
 
+        """
+        #Now done in learning foreground
         if (lastState):
             pubPrediction = rospy.Publisher('horde_verifier/' + self.name + 'Prediction', Float64, queue_size=10)
             pubPrediction.publish(pred)
+            pubRupee = rospy.Publisher('horde_verifier/' + self.name + 'Rupee', Float64, queue_size=10)
+            pubRupee.publish(rupee)
             #pubObs = rospy.Publisher('horde_verifier/NormalizedEncoderPosition', Float64, queue_size=10)
             #normalizedObs = 3.0 * (lastState.encoder - 510.0) / (1023.0-510.0)
             #pubObs.publish(normalizedObs )
-
+        """
 
 
     def tdLearn(self, lastState, action, newState):
@@ -154,13 +175,26 @@ class GVF:
         print("tdError: " + str(tdError))
         #print("Weights before:")
         #print(self.weights)
+
+        #update Rupee
+        self.hHatWeights = self.hHatWeights + self.alphaHat * (tdError * self.eligibilityTrace - (numpy.inner(self.hHatWeights, lastState.X)) * lastState.X)
+        print("tao before: " + str(self.tao))
+        self.tao = (1.0 - self.betaNot) * self.tao + self.betaNot
+        print("tao after: " + str(self.tao))
+
+        beta = self.betaNot / self.tao
+        print("beta: " + str(beta))
+        self.movingtdEligErrorAverage =(1.0 - beta) * self.movingtdEligErrorAverage + beta * tdError * self.eligibilityTrace
+
         self.weights = self.weights + self.alpha * tdError * self.eligibilityTrace
 
         #print("wEights after: ")
         #print(self.weights)
         pred = self.prediction(lastState)
         print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
+        rupee = self.rupee()
 
+        print("Rupee: " + str(rupee))
         self.gammaLast = gammaNext
 
         if (lastState):
@@ -169,3 +203,6 @@ class GVF:
 
     def prediction(self, stateRepresentation):
         return numpy.inner(self.weights, stateRepresentation.X)
+
+    def rupee(self):
+        return numpy.sqrt(numpy.absolute(numpy.inner(self.hHatWeights, self.movingtdEligErrorAverage)))
