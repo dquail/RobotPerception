@@ -32,7 +32,7 @@ class GVF:
     gamma, cumulant, and policy functions can/should be overiden by the specific instantiation of the GVF based on the intended usage.
     """
     def gamma(self, state):
-        return 0
+        return 0.0
 
     def cumulant(self, state):
         return 1
@@ -198,6 +198,7 @@ class GVF:
         beta = self.betaNot / self.tao
         print("beta: " + str(beta))
         self.movingtdEligErrorAverage =(1.0 - beta) * self.movingtdEligErrorAverage + beta * tdError * self.eligibilityTrace
+
 
         #update UDE
         oldAverageTD = self.averageTD

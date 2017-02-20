@@ -80,7 +80,7 @@ def createPredictLoadGVFs():
     for i in range(1, 10, 1):
         #T = 1/(1-gamma)
         #gamma = (T-1)/T
-        gamma = (i-1)/i
+        gamma = (i-1.0)/i
 
         #Create On policy gvf
         gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGamma" + str(i))
@@ -108,7 +108,6 @@ def createHowLongUntilLeftGVFs():
     gvfOn.gamma = atLeftGamma
     gvfOn.cumulant = timestepCumulant
 
-    #TODO - Uncomment to lerarn on policy as well
     gvfs.append(gvfOn)
 
     gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name = "HowLongLeftOffPolicy")
@@ -151,29 +150,8 @@ class LearningForeground:
         self.currentRadians = 0
         self.increasingRadians = True
 
-        """
-        extremeLeftPrediction = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, False)
-        extremeLeftPrediction.gamma = atLeftGamma
-        self.demons.append(extremeLeftPrediction)
-        extremeLeftVerifier = Verifier(4, 'StepsToExtremeLeft')
-
-        self.verifiers[extremeLeftPrediction] = extremeLeftVerifier
-        """
-
-        """
-        directLeftPrediction = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1/TileCoder.numberOfTilings, True)
-        directLeftPrediction.policy = directLeftPolicy
-        directLeftPrediction.gamma = atLeftGamma
-        self.demons.append(directLeftPrediction)
-        """
-
-        """
-        predictLoadPrediction = PredictLoadDemon(self.numTiles*self.numTiles*self.numTilings, 1.0/(10.0 * self.numTilings))
-        predictLoadVerifier = Verifier(5)
-        self.demons.append(predictLoadPrediction)
-        self.verifiers.append(predictLoadVerifier)
-        """
-        self.demons = createHowLongUntilLeftGVFs()
+        self.demons = createPredictLoadGVFs()
+        #self.demons = createHowLongUntilLeftGVFs()
 
         self.previousState = False
 
