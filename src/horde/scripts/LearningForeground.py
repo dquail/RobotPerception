@@ -77,9 +77,7 @@ def createPredictLoadGVFs():
 
     gvfs = []
 
-    #TODO - Uncomment after testing
-    #for i in range(1, 10, 1):
-    for i in range(1,2,1):
+    for i in range(1, 10, 1):
         #T = 1/(1-gamma)
         #gamma = (T-1)/T
         gamma = (i-1.0)/i
@@ -89,8 +87,8 @@ def createPredictLoadGVFs():
         gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGammaOnPolicy" + str(i))
         gvfOnPolicy.gamma = makeGammaFunction(gamma)
         gvfOnPolicy.cumulant = loadCumulant
-        #TODO - Uncomment after testing
-        #gvfs.append(gvfOnPolicy)
+
+        gvfs.append(gvfOnPolicy)
 
         #Create Off policy gvf
         gvOffPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = True, name = "PredictedLoadGammaOffPolicy" + str(i))
