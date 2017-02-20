@@ -56,6 +56,11 @@ def loadCumulant(state):
 def timestepCumulant(state):
     return 1
 
+def makeGammaFunction(gamma):
+    def gammaFunction(state):
+        return gamma
+    return gammaFunction
+
 def makeVectorBitCumulantFunction(bitIndex):
     def cumulantFunction(state):
         if (state.X[bitIndex] == 1):
@@ -79,14 +84,14 @@ def createPredictLoadGVFs():
 
         #Create On policy gvf
         gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGamma" + str(i))
-        gvfOnPolicy.gamma = gamma
+        gvfOnPolicy.gamma = makeGammaFunction(gamma)
         gvfOnPolicy.cumulant = loadCumulant
 
         gvfs.append(gvfOnPolicy)
 
         #Create Off policy gvf
         gvOffPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = True, name = "PredictedLoadGamma" + str(i))
-        gvOffPolicy.gamma = gamma
+        gvOffPolicy.gamma = makeGammaFunction(gamma)
         gvOffPolicy.cumulant = loadCumulant
         gvOffPolicy.policy = directLeftPolicy
 
