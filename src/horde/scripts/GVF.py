@@ -97,8 +97,6 @@ class GVF:
         #print("hWeights before:")
         #print(self.hWeights)
 
-        print("tdError: " + str(tdError))
-
         self.hWeights = self.hWeights + self.alpha * 0.1 * (tdError * self.eligibilityTrace - (numpy.inner(self.hWeights, lastState.X)) * lastState.X)
 
         #update Rupee
@@ -113,8 +111,14 @@ class GVF:
 
         #update UDE
         oldAverageTD = self.averageTD
+        print("Old averageTD:" + str(oldAverageTD))
+
+
         self.averageTD = (1.0 - beta) * self.averageTD + beta * tdError
-        self.tdVariance = (self.i - 1) * self.tdVariance + (tdError - oldAverageTD) * (tdError - self.averageTD)
+        print("New AverageTD: " + str(self.averageTD))
+        print("tdvariance before: " + str(self.tdVariance))
+        self.tdVariance = ((self.i - 1) * self.tdVariance + (tdError - oldAverageTD) * (tdError - self.averageTD)) / self.i
+        print("td variance after: " + str(self.tdVariance))
         self.i = self.i + 1
 
         #print("hWeights after:")
@@ -203,7 +207,7 @@ class GVF:
         #update UDE
         oldAverageTD = self.averageTD
         self.averageTD = (1.0 - beta) * self.averageTD + beta * tdError
-        self.tdVariance = (self.i - 1) * self.tdVariance + (tdError - oldAverageTD) * (tdError - self.averageTD)
+        self.tdVariance = ((self.i - 1) * self.tdVariance + (tdError - oldAverageTD) * (tdError - self.averageTD)) / self.i
         self.i = self.i + 1
 
         self.weights = self.weights + self.alpha * tdError * self.eligibilityTrace
@@ -233,4 +237,4 @@ class GVF:
         return numpy.sqrt(numpy.absolute(numpy.inner(self.hHatWeights, self.movingtdEligErrorAverage)))
 
     def ude(self):
-        return numpy.absolute(self.averageTD / numpy.sqrt(self.tdVariance) + 0.001)
+        return numpy.absolute(self.averageTD / (numpy.sqrt(self.tdVariance) + 0.000001))

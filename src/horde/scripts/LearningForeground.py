@@ -77,20 +77,23 @@ def createPredictLoadGVFs():
 
     gvfs = []
 
-    for i in range(1, 10, 1):
+    #TODO - Uncomment after testing
+    #for i in range(1, 10, 1):
+    for i in range(1,2,1):
         #T = 1/(1-gamma)
         #gamma = (T-1)/T
         gamma = (i-1.0)/i
 
         #Create On policy gvf
-        gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGamma" + str(i))
+
+        gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGammaOnPolicy" + str(i))
         gvfOnPolicy.gamma = makeGammaFunction(gamma)
         gvfOnPolicy.cumulant = loadCumulant
-
-        gvfs.append(gvfOnPolicy)
+        #TODO - Uncomment after testing
+        #gvfs.append(gvfOnPolicy)
 
         #Create Off policy gvf
-        gvOffPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = True, name = "PredictedLoadGamma" + str(i))
+        gvOffPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = True, name = "PredictedLoadGammaOffPolicy" + str(i))
         gvOffPolicy.gamma = makeGammaFunction(gamma)
         gvOffPolicy.cumulant = loadCumulant
         gvOffPolicy.policy = directLeftPolicy
