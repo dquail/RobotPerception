@@ -53,6 +53,9 @@ def atLeftGamma(state):
 def loadCumulant(state):
     return state.load
 
+def encoderCumulant(state):
+    return state.encoder
+
 def timestepCumulant(state):
     return 1
 
@@ -68,6 +71,17 @@ def makeVectorBitCumulantFunction(bitIndex):
         else:
             return 0
     return cumulantFunction
+
+
+def createNextEncoderGVF():
+    gvfs = []
+    gvOffPolicy = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings,
+                      0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name="PredictNextEncoderOffPolicy")
+
+    gvOffPolicy.cumulant = encoderCumulant
+    gvOffPolicy.policy = directLeftPolicy
+    gvfs.append(gvOffPolicy)
+    return gvfs
 
 
 def createPredictLoadGVFs():
@@ -124,13 +138,14 @@ def createNextBitGVFs():
     gvfs = []
 
     #TODO Remove after testing
+    """
     gvfOn = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings,
                 0.1 / TileCoder.numberOfTilings, isOffPolicy=False, name="NextBitOnPolicy" + str(301))
     gvfOn.cumulant = makeVectorBitCumulantFunction(301)
     gvfs.append(gvfOn)
-
-    #TODO uncomment after testing
     """
+    #TODO uncomment after testing
+
 
     vectorSize = TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings
 
@@ -142,9 +157,9 @@ def createNextBitGVFs():
         gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name = "NextBitOffPolicy"+ str(i))
         gvfOff.cumulant = makeVectorBitCumulantFunction(i)
         gvfOff.policy = directLeftPolicy
-        gvfOff.append(gvfOff)
+        gvfs.append(gvfOff)
 
-    """
+
     return gvfs
 
 
@@ -162,14 +177,27 @@ class LearningForeground:
         self.increasingRadians = True
 
         #Initialize the demons appropriately depending on what test you are runnning by commenting / uncommenting
-        #self.demons = createPredictLoadGVFs()
+        self.pavlovDemon = False
+        self.demons = createPredictLoadGVFs()
         #self.demons = createHowLongUntilLeftGVFs()
-        self.demons = createNextBitGVFs()
+        #self.demons = createNextBitGVFs()
 
+        #self.demons = createNextEncoderGVF()
+        #self.pavlovDemon = self.demons[0]
 
         self.previousState = False
 
         #Initialize the sensory values of interest
+
+    def performPavlov(self):
+        print("!!!Pavlov control!!!!")
+        self.lastAction = 1
+        self.currentRadians = self.currentRadians - 0.5
+        self.increasingRadians = False
+        print("Switching direction")
+        print("Going to radians: " + str(self.currentRadians))
+        pub = rospy.Publisher('tilt_controller/command', Float64, queue_size=10)
+        pub.publish(self.currentRadians)
 
     def performSlowBackAndForth(self):
         if self.increasingRadians:
@@ -223,7 +251,7 @@ class LearningForeground:
             action  = self.behaviorPolicy.policy(newState)
             self.performAction(action)
             """
-            self.performSlowBackAndForth()
+
 
     def publishPredictionsAndErrors(self, state):
         print("Publishing predictions")
@@ -245,7 +273,6 @@ class LearningForeground:
 
             pubRupee = rospy.Publisher('horde_verifier/' + demon.name + 'Rupee', Float64, queue_size=10)
             pubRupee.publish(rupee)
-
             pubUDE = rospy.Publisher('horde_verifier/' + demon.name + 'UDE', Float64, queue_size=10)
             pubUDE.publish(ude)
 
@@ -259,11 +286,37 @@ class LearningForeground:
 
     def receiveStateUpdateCallback(self, newState):
         #Staterepresentation callback
+
+        #publish new state encoder
+        #TODO Remove after testing magic 301
+        #e = (newState.encoder - 510.0) / 5.0
+        e = (newState.encoder)
+        pubCumulant = rospy.Publisher('horde_verifier/EncoderPosition', Float64, queue_size=10)
+        pubCumulant.publish(e)
+        #1. Learn
         #Convert the list of X's into an actual numpy array
         newState.X = numpy.array(newState.X)
         newState.lastX = numpy.array(newState.lastX)
+        startTime = time.time()
         self.updateDemons(newState)
+        endTime = time.time()
+        print("##############")
+        print("######## learning processing time: " + str(endTime - startTime))
+        #0.09 seconds on average. Clobbering CPU
+        #2. Take action
+        #TODO - place code for pavlov
+        pavlovSignal = False
+        if self.pavlovDemon:
+            pred = self.pavlovDemon.prediction(newState)
+            print("pavlov prediction:" + str(pred))
+            pavlovSignal = self.pavlovDemon.prediction(newState) > 900.0
 
+        if pavlovSignal == True:
+            self.performPavlov()
+        else:
+            self.performSlowBackAndForth()
+
+        #3. Publish predictions and errors
         if self.previousState:
             self.publishPredictionsAndErrors(self.previousState)
 
