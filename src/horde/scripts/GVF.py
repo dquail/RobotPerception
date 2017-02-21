@@ -224,12 +224,19 @@ class GVF:
         ude = self.ude()
         print("UDE: " + str(ude))
 
+        #TODO Remove after testing magic 301
+        pubCumulant = rospy.Publisher('horde_verifier/' + self.name + 'Cumulant', Float64, queue_size=10)
+        pubCumulant.publish(newState.X[301])
+
         self.gammaLast = gammaNext
 
+        #Now done in the Foreground
+        """
         if (lastState):
             pubPrediction = rospy.Publisher('horde_verifier/' + self.name + 'Prediction', Float64, queue_size=10)
             pubPrediction.publish(pred)
 
+        """
     def prediction(self, stateRepresentation):
         return numpy.inner(self.weights, stateRepresentation.X)
 

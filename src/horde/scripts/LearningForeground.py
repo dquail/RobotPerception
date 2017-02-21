@@ -122,19 +122,29 @@ def createHowLongUntilLeftGVFs():
 
 def createNextBitGVFs():
     gvfs = []
+
+    #TODO Remove after testing
+    gvfOn = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings,
+                0.1 / TileCoder.numberOfTilings, isOffPolicy=False, name="NextBitOnPolicy" + str(301))
+    gvfOn.cumulant = makeVectorBitCumulantFunction(301)
+    gvfs.append(gvfOn)
+
+    #TODO uncomment after testing
+    """
+
     vectorSize = TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings
+
     for i in range(0, vectorSize, 1):
         gvfOn = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "NextBitOnPolicy"+ str(i))
         gvfOn.cumulant = makeVectorBitCumulantFunction(i)
-        gvfOn.gamma = 0
         gvfs.append(gvfOn)
 
         gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name = "NextBitOffPolicy"+ str(i))
         gvfOff.cumulant = makeVectorBitCumulantFunction(i)
-        gvfOff.gamma = 0
         gvfOff.policy = directLeftPolicy
         gvfOff.append(gvfOff)
 
+    """
     return gvfs
 
 
@@ -151,8 +161,11 @@ class LearningForeground:
         self.currentRadians = 0
         self.increasingRadians = True
 
-        self.demons = createPredictLoadGVFs()
+        #Initialize the demons appropriately depending on what test you are runnning by commenting / uncommenting
+        #self.demons = createPredictLoadGVFs()
         #self.demons = createHowLongUntilLeftGVFs()
+        self.demons = createNextBitGVFs()
+
 
         self.previousState = False
 
