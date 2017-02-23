@@ -6,8 +6,8 @@ We have previously demonstrated an ability to answer predictive questions using 
 Until this point however, the work we have done was to simply answer one single question as our robot experiences the world. A very limiting amount of knowledge. A natural next step would be to answer many questions simultaneously in such a way that 1) would allow more abstract questions to be answered that build off previous questions. and 2) allow behavior to change based upon these predictions. 
 
 In this module, we look to build such an architecture and run various experiments that 
-- Answer several interesting off policy and on policy questions simultaneously (see [Horde for information about General value functions](https://www.cs.swarthmore.edu/~meeden/DevelopmentalRobotics/horde1.pdf)) and to then change behavior based on one of these predictions (See [Prediction Driven Behavior](http://webdocs.cs.ualberta.ca/~sutton/papers/MS-AAAIws-2014.pdf) for more information about Pavlovian control).
-- Measure the error of the answers in real time using Recent Unsigned Projected Error Estimates (RUPEE) and Unexpected Demon Error (UDE). *See [Adam White's PHD Thesis for RUPEE and UDE information](http://homes.soic.indiana.edu/adamw/phd.pdf)
+- Answer several interesting off policy and on policy questions simultaneously (see [Horde](https://www.cs.swarthmore.edu/~meeden/DevelopmentalRobotics/horde1.pdf) for information about General value functions) and to then change behavior based on one of these predictions (See [Prediction Driven Behavior](http://webdocs.cs.ualberta.ca/~sutton/papers/MS-AAAIws-2014.pdf) for more information about Pavlovian control).
+- Measure the error of the answers in real time using Recent Unsigned Projected Error Estimates (RUPEE) and Unexpected Demon Error (UDE). (See [Adam White's PHD Thesis for RUPEE and UDE information](http://homes.soic.indiana.edu/adamw/phd.pdf))
 
 Before explaining the experiments, a brief description of the architecture designed is given.
 
@@ -142,7 +142,7 @@ To demonstrate an ability to immediately alter behavior if a certain prediction 
 
 Below is a graph showing the execution of the robot throughout this experiment. Pay particular attention to the encoder position. For the first few cycles, the encoder oscillates between ~1023 and 510 (as expected). However, quite quickly, the demon begins to predict when it will get to within 900, and quickly alters direction. This is seen by the blue lines (encoder position) increasing to 1023 for the first 2 oscillations, but then reversing direction at around 900 radians the third time. 
 
-![Design](Graphs/RUPEE.png)
+![Design](Graphs/Pavlov.png)
 
 ##Experiment 4 - Predicting the bit stream
 Thus far, we’ve demonstrated pavlovian control, as well as an ability to have several GVFs simultaneously learning with different gammas and policies. What we wanted to do next was to stress test the architecture to see how many GVFs could learn simultaneously.
