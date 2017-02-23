@@ -6,7 +6,7 @@ We have previously demonstrated an ability to answer predictive questions using 
 Until this point however, the work we have done was to simply answer one single question as our robot experiences the world. A very limiting amount of knowledge. A natural next step would be to answer many questions simultaneously in such a way that 1) would allow more abstract questions to be answered that build off previous questions. and 2) allow behavior to change based upon these predictions. 
 
 In this module, we look to build such an architecture and run various experiments that 
-- Answer several interesting off policy and on policy questions simultaneously and change behavior.
+- Answer several interesting off policy and on policy questions simultaneously (see [Horde for information about General value functions](https://www.cs.swarthmore.edu/~meeden/DevelopmentalRobotics/horde1.pdf)) and to then change behavior based on one of these predictions (See [Prediction Driven Behavior](http://webdocs.cs.ualberta.ca/~sutton/papers/MS-AAAIws-2014.pdf) for more information about Pavlovian control).
 - Measure the error of the answers in real time using Recent Unsigned Projected Error Estimates (RUPEE) and Unexpected Demon Error (UDE). *See [Adam White's PHD Thesis for RUPEE and UDE information](http://homes.soic.indiana.edu/adamw/phd.pdf)
 
 Before explaining the experiments, a brief description of the architecture designed is given.
