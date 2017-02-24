@@ -2,6 +2,7 @@ import numpy
 import rospy
 from std_msgs.msg import Float64
 from horde.msg import StateRepresentation
+from TileCoder import *
 
 class GVF:
     def __init__(self, featureVectorLength, alpha, isOffPolicy, name = "GVF name"):
@@ -17,11 +18,12 @@ class GVF:
         self.eligibilityTrace = numpy.zeros(self.numberOfFeatures)
         self.gammaLast = 1
 
-        self.alpha = alpha
-        self.alphaHat = self.alpha #TODO - Not sure what best to set this at
-        self.betaNot = (1.0 - 0.95) * self.alphaHat / 30
-        self.betaNotUDE = self.alpha * 10
-        self.betaNotRUPEE = (1.0 - 0.95) * self.alphaHat / 30
+        self.alpha = (1.0 - 0.90) * alpha
+        self.alphaH = 0.01 * self.alpha #Same alpha for H vector and each HHat vector
+
+        self.alphaRUPEE = 5.0 * self.alpha
+        self.betaNotUDE = self.alpha * 10.0
+        self.betaNotRUPEE = (1.0 - 0.90) * alpha * TileCoder.numberOfTilings / 30
         self.taoRUPEE = 0
         self.taoUDE = 0
         self.movingtdEligErrorAverage = 0 #average of TD*elig*hHat
@@ -45,7 +47,7 @@ class GVF:
         return 1
 
     def lam(self, state):
-        return 0.95
+        return 0.90
 
     def rho(self, action, state):
         targetAction = self.policy(state)
@@ -63,12 +65,12 @@ class GVF:
     def gtdLearn(self, lastState, action, newState):
 
         #print("")
-        #print("!!!!! LEARN  !!!!!!!")
-        #print("GVF name: " + str(self.name))
-        #print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
+        print("!!!!! LEARN  !!!!!!!")
+        print("GVF name: " + str(self.name))
+        print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
         pred = self.prediction(lastState)
         #print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
-        #print("alpha: " + str(self.alpha))
+
         #print("action")
         #print(action)
         zNext = self.cumulant(newState)
@@ -84,13 +86,14 @@ class GVF:
         self.eligibilityTrace = rho * (self.gammaLast * lam * self.eligibilityTrace + lastState.X)
         tdError = zNext + gammaNext * numpy.inner(newState.X, self.weights) - numpy.inner(lastState.X, self.weights)
 
+
         #print("tdError: " + str(tdError))
 
 
-        self.hWeights = self.hWeights + self.alpha * 0.1 * (tdError * self.eligibilityTrace - (numpy.inner(self.hWeights, lastState.X)) * lastState.X)
+        self.hWeights = self.hWeights + self.alphaH  * (tdError * self.eligibilityTrace - (numpy.inner(self.hWeights, lastState.X)) * lastState.X)
 
         #update Rupee
-        self.hHatWeights = self.hHatWeights + self.alphaHat * (tdError * self.eligibilityTrace - (numpy.inner(self.hHatWeights, lastState.X)) * lastState.X)
+        self.hHatWeights = self.hHatWeights + self.alphaRUPEE * (tdError * self.eligibilityTrace - (numpy.inner(self.hHatWeights, lastState.X)) * lastState.X)
         #print("tao before: " + str(self.tao))
         self.taoRUPEE = (1.0 - self.betaNotRUPEE) * self.taoRUPEE + self.betaNotRUPEE
         #print("tao after: " + str(self.tao))
@@ -129,11 +132,11 @@ class GVF:
 
 
     def tdLearn(self, lastState, action, newState):
-        #print("!!!!! LEARN  !!!!!!!")
-        #print("GVF name: " + str(self.name))
-        #print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
+        print("!!!!! LEARN  !!!!!!!")
+        print("GVF name: " + str(self.name))
+        print("For (" + str(lastState.encoder) +  ", " + str(lastState.speed) +  ") to (" + str(newState.encoder) + ", " + str(newState.speed) + ")")
         pred = self.prediction(lastState)
-        #print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
+        print("--- Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed) + " before learning: " + str(pred))
 
         #print("alpha: " + str(self.alpha))
 
@@ -155,7 +158,7 @@ class GVF:
         #print("tdError: " + str(tdError))
 
         #update Rupee
-        self.hHatWeights = self.hHatWeights + self.alphaHat * (tdError * self.eligibilityTrace - (numpy.inner(self.hHatWeights, lastState.X)) * lastState.X)
+        self.hHatWeights = self.hHatWeights + self.alphaRUPEE * (tdError * self.eligibilityTrace - (numpy.inner(self.hHatWeights, lastState.X)) * lastState.X)
         #print("tao before: " + str(self.tao))
         self.taoRUPEE = (1.0 - self.betaNotRUPEE) * self.taoRUPEE + self.betaNotRUPEE
         #print("tao after: " + str(self.taoRUPEE))
@@ -176,7 +179,7 @@ class GVF:
         self.weights = self.weights + self.alpha * tdError * self.eligibilityTrace
 
         pred = self.prediction(lastState)
-        #print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
+        print("Prediction for " + str(lastState.encoder) + ", " + str(lastState.speed)  + " after learning: " + str(pred))
         rupee = self.rupee()
 
         #print("Rupee: " + str(rupee))

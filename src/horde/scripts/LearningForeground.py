@@ -40,6 +40,7 @@ import numpy
 """
 sets up the subscribers and starts to broadcast the results in a thread every 0.1 seconds
 """
+alpha = 0.1
 
 def directLeftPolicy(state):
     return 2
@@ -76,7 +77,7 @@ def makeVectorBitCumulantFunction(bitIndex):
 def createNextEncoderGVF():
     gvfs = []
     gvOffPolicy = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings,
-                      0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name="PredictNextEncoderOffPolicy")
+                      alpha / TileCoder.numberOfTilings, isOffPolicy=True, name="PredictNextEncoderOffPolicy")
 
     gvOffPolicy.cumulant = encoderCumulant
     gvOffPolicy.policy = directLeftPolicy
@@ -98,14 +99,14 @@ def createPredictLoadGVFs():
 
         #Create On policy gvf
 
-        gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGammaOnPolicy" + str(i))
+        gvfOnPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, alpha / TileCoder.numberOfTilings, isOffPolicy = False, name = "PredictedLoadGammaOnPolicy" + str(i))
         gvfOnPolicy.gamma = makeGammaFunction(gamma)
         gvfOnPolicy.cumulant = loadCumulant
 
         gvfs.append(gvfOnPolicy)
 
         #Create Off policy gvf
-        gvOffPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = True, name = "PredictedLoadGammaOffPolicy" + str(i))
+        gvOffPolicy = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, alpha / TileCoder.numberOfTilings, isOffPolicy = True, name = "PredictedLoadGammaOffPolicy" + str(i))
         gvOffPolicy.gamma = makeGammaFunction(gamma)
         gvOffPolicy.cumulant = loadCumulant
         gvOffPolicy.policy = directLeftPolicy
@@ -119,13 +120,13 @@ def createHowLongUntilLeftGVFs():
 
     gvfs = []
 
-    gvfOn = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "HowLongLeftOnPolicy")
+    gvfOn = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, alpha / TileCoder.numberOfTilings, isOffPolicy = False, name = "HowLongLeftOnPolicy")
     gvfOn.gamma = atLeftGamma
     gvfOn.cumulant = timestepCumulant
 
     gvfs.append(gvfOn)
 
-    gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name = "HowLongLeftOffPolicy")
+    gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, alpha / TileCoder.numberOfTilings, isOffPolicy=True, name = "HowLongLeftOffPolicy")
     gvfOff.gamma = atLeftGamma
     gvfOff.cumulant = timestepCumulant
     gvfOff.policy = directLeftPolicy
@@ -150,11 +151,11 @@ def createNextBitGVFs():
     vectorSize = TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings
 
     for i in range(0, vectorSize, 1):
-        gvfOn = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy = False, name = "NextBitOnPolicy"+ str(i))
+        gvfOn = GVF(TileCoder.numberOfTiles*TileCoder.numberOfTiles * TileCoder.numberOfTilings, alpha / TileCoder.numberOfTilings, isOffPolicy = False, name = "NextBitOnPolicy"+ str(i))
         gvfOn.cumulant = makeVectorBitCumulantFunction(i)
         gvfs.append(gvfOn)
 
-        gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, 0.1 / TileCoder.numberOfTilings, isOffPolicy=True, name = "NextBitOffPolicy"+ str(i))
+        gvfOff = GVF(TileCoder.numberOfTiles * TileCoder.numberOfTiles * TileCoder.numberOfTilings, alpha / TileCoder.numberOfTilings, isOffPolicy=True, name = "NextBitOffPolicy"+ str(i))
         gvfOff.cumulant = makeVectorBitCumulantFunction(i)
         gvfOff.policy = directLeftPolicy
         gvfs.append(gvfOff)
@@ -178,8 +179,8 @@ class LearningForeground:
 
         #Initialize the demons appropriately depending on what test you are runnning by commenting / uncommenting
         self.pavlovDemon = False
-        self.demons = createPredictLoadGVFs()
-        #self.demons = createHowLongUntilLeftGVFs()
+        #self.demons = createPredictLoadGVFs()
+        self.demons = createHowLongUntilLeftGVFs()
         #self.demons = createNextBitGVFs()
 
         #self.demons = createNextEncoderGVF()
@@ -243,18 +244,15 @@ class LearningForeground:
         if self.previousState:
             #Learning
             for demon in self.demons:
+                predBefore = demon.prediction(self.previousState)
                 demon.learn(self.previousState, self.lastAction, newState)
+                print("Demon prediction before: " + str(predBefore))
+                print("Demon prediction after: " + str(demon.prediction(self.previousState)))
                 if demon in self.verifiers:
                     self.verifiers[demon].append(demon.gamma(newState), demon.cumulant(newState), demon.prediction(newState), newState)
 
-            """
-            action  = self.behaviorPolicy.policy(newState)
-            self.performAction(action)
-            """
-
 
     def publishPredictionsAndErrors(self, state):
-        print("Publishing predictions")
         averageRupee = 0
         averageUDE = 0
         i = 1
@@ -291,6 +289,7 @@ class LearningForeground:
         #TODO Remove after testing magic 301
         #e = (newState.encoder - 510.0) / 5.0
         e = (newState.encoder)
+        e = 100 * (e - 510.0) / (1023.0 - 510.0)
         pubCumulant = rospy.Publisher('horde_verifier/EncoderPosition', Float64, queue_size=10)
         pubCumulant.publish(e)
         #1. Learn
@@ -300,8 +299,7 @@ class LearningForeground:
         startTime = time.time()
         self.updateDemons(newState)
         endTime = time.time()
-        print("##############")
-        print("######## learning processing time: " + str(endTime - startTime))
+
         #0.09 seconds on average. Clobbering CPU
         #2. Take action
         #TODO - place code for pavlov
@@ -314,7 +312,10 @@ class LearningForeground:
         if pavlovSignal == True:
             self.performPavlov()
         else:
-            self.performSlowBackAndForth()
+            #self.performSlowBackAndForth()
+            #action = self.behaviorPolicy()
+            action  = self.behaviorPolicy.policy(newState)
+            self.performAction(action)
 
         #3. Publish predictions and errors
         if self.previousState:
