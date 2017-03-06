@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a0d885d6-9bf6-457f-9899-b7cbc234650b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/GVF.py" afterPath="$PROJECT_DIR$/src/horde/scripts/GVF.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" afterPath="$PROJECT_DIR$/src/horde/scripts/LearningForeground.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" afterPath="$PROJECT_DIR$/src/horde/scripts/ObservationManager.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,7 +20,7 @@
       <file leaf-file-name="GVF.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
+            <state relative-caret-position="1275">
               <caret line="89" column="10" lean-forward="false" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -45,7 +42,7 @@
       <file leaf-file-name="LearningForeground.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
+            <state relative-caret-position="1500">
               <caret line="126" column="4" lean-forward="false" selection-start-line="126" selection-start-column="4" selection-end-line="126" selection-end-column="4" />
               <folding>
                 <element signature="e#205#217#0" expanded="true" />
@@ -182,8 +179,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2048" />
-    <option name="y" value="76" />
+    <option name="x" value="130" />
+    <option name="y" value="94" />
     <option name="width" value="1394" />
     <option name="height" value="792" />
   </component>
@@ -553,7 +550,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2048" y="76" width="1394" height="792" extended-state="0" />
+    <frame x="130" y="94" width="1394" height="792" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20301291" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -879,7 +876,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/GVF.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
+        <state relative-caret-position="1275">
           <caret line="89" column="10" lean-forward="false" selection-start-line="89" selection-start-column="10" selection-end-line="89" selection-end-column="10" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -889,7 +886,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/horde/scripts/LearningForeground.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="1500">
           <caret line="126" column="4" lean-forward="false" selection-start-line="126" selection-start-column="4" selection-end-line="126" selection-end-column="4" />
           <folding>
             <element signature="e#205#217#0" expanded="true" />
