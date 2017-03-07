@@ -31,6 +31,7 @@ from horde.msg import StateRepresentation
 from BehaviorPolicy import *
 from TileCoder import *
 from GVF import *
+from ActorCritic import *
 from Verifier import *
 from PredictLoadDemon import *
 import time
@@ -163,6 +164,9 @@ def createNextBitGVFs():
 
     return gvfs
 
+def createActorCritic():
+    ac = ActorCritic()
+    return ac
 
 class LearningForeground:
 
@@ -180,7 +184,8 @@ class LearningForeground:
         #Initialize the demons appropriately depending on what test you are runnning by commenting / uncommenting
         self.pavlovDemon = False
         #self.demons = createPredictLoadGVFs()
-        self.demons = createHowLongUntilLeftGVFs()
+        #self.demons = createHowLongUntilLeftGVFs()
+        self.actorCritic = createActorCritic()
         #self.demons = createNextBitGVFs()
 
         #self.demons = createNextEncoderGVF()
@@ -233,6 +238,18 @@ class LearningForeground:
             pub.publish(3.0)
 
         self.lastAction = action
+
+    def updateActorCritic(self, newState):
+        print("LearningForeground received stateRepresentation encoder: " + str(newState.encoder))
+        print("@@@@@@@@@@@@ newState.X length: " + str(len(newState.X)))
+        encoderPosition = newState.encoder
+        speed = newState.speed
+        load = newState.load
+
+        if self.previousState:
+            #Learning
+            if self.actorCritic:
+                self.actorCritic.learn(self.previousState, self.lastAction, newState)
 
     def updateDemons(self, newState):
         print("LearningForeground received stateRepresentation encoder: " + str(newState.encoder))
@@ -298,6 +315,7 @@ class LearningForeground:
         newState.lastX = numpy.array(newState.lastX)
         startTime = time.time()
         self.updateDemons(newState)
+        self.updateActorCritic(newState)
         endTime = time.time()
 
         #0.09 seconds on average. Clobbering CPU
@@ -314,7 +332,11 @@ class LearningForeground:
         else:
             #self.performSlowBackAndForth()
             #action = self.behaviorPolicy()
-            action  = self.behaviorPolicy.policy(newState)
+            if self.actorCritic:
+                action = self.actorCritic.pickActionForState(newState)
+            else:
+                action  = self.behaviorPolicy.policy(newState)
+
             self.performAction(action)
 
         #3. Publish predictions and errors

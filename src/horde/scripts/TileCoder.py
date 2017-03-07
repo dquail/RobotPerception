@@ -15,6 +15,7 @@ class TileCoder(object):
 
     numberOfTiles = 8
     numberOfTilings = 8
+    numberOfActions = 2
 
     @staticmethod
     def getIndexes(numTilings, vectorLength, value):
@@ -34,3 +35,20 @@ class TileCoder(object):
         indexes, l = TileCoder.getIndexes(numTilings, vectorLength, value)
         featureVector = TileCoder.getVectorFromIndexes(indexes, vectorLength)
         return featureVector
+    """
+    @staticmethod
+    def getFeatureActionVectorFromValuesAndAction(value, action, numTilings = numberOfTilings, numTiles = numberOfTiles, numActions = numberOfActions):
+        vectorLength = numTilings * numpy.power(numTiles, len(value)) * numActions
+        featureVector = TileCoder.getFeatureVectorFromValues(value, numTilings, numTiles)
+
+        featureActionVector = numpy.zeros(vectorLength)
+        if (action == 1):
+            #move left
+            featureActionVector[0:len(featureVector)] = featureVector
+        if (action == 2):
+            #move right
+            featureActionVector[len(featureVector):] = featureVector
+
+        return featureVector
+
+    """
