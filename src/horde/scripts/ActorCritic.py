@@ -18,9 +18,9 @@ class ActorCritic:
         self.lambdaPolicy = 0.35
         self.lambdaValue = 0.35
         self.averageReward = 0.0
-        self.alpha = 0.01
-        self.beta = 0.01
-        self.rewardStep = 0.001
+        self.beta = 0.1
+        self.alpha = 0.1
+        self.rewardStep = 0.01
 
     def policyFeatureVectorFromStateAction(self, state, action):
 
@@ -59,6 +59,14 @@ class ActorCritic:
         i = 0
         for action in self.actions:
             policyArray[i] = self.policy(state, action)
+            pubProbability = rospy.Publisher('horde_AC/ProbOfAction' + str(i), Float64, queue_size=10)
+            pubProbability.publish(policyArray[i])
+            if ((state.encoder > 620) & (state.encoder < 700)):
+                pubProbabilitySpecial = rospy.Publisher('horde_AC/ProbOfActionInState' + str(i), Float64, queue_size=10)
+                pubProbabilitySpecial.publish(policyArray[i])
+                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
             i = i + 1
 
         #select action given this distribution
@@ -72,9 +80,13 @@ class ActorCritic:
 
     #This should probably not be defined with the actor critic, but rather be sent to the actor critic in the learn step
     def reward(self, previousState, action, newState):
+        pubReward = rospy.Publisher('horde_AC/reward', Float64, queue_size=10)
+
         if ((action == 1) & (newState.encoder < 550.0) & (previousState.encoder > 550.0)):
+            pubReward.publish(1.0)
             return 1
         else:
+            pubReward.publish(0.0)
             return 0
 
     def sumOfProbTimesFeatures(self, state):
@@ -88,7 +100,7 @@ class ActorCritic:
         print("============= In actor critic learn =========")
 
         reward = self.reward(previousState, action, newState)
-        print("previous encoder: " + str(previousState.encoder) + ", new encoder: " + str(newState.encoder) + ", action: " + str(action) + ", reward: " + str(reward))
+        print("previous encoder: " + str(previousState.encoder) + ", speed: " + str(previousState.speed) + ", new encoder: " + str(newState.encoder) + " speed: " + str(newState.speed) +  ", action: " + str(action) + ", reward: " + str(reward))
 
         #Critic update
         tdError = reward - self.averageReward + numpy.inner(newState.X, self.valueWeights) - numpy.inner(previousState.X, self.valueWeights)
@@ -102,6 +114,8 @@ class ActorCritic:
         self.elibibilityTracePolicy = self.lambdaPolicy * self.elibibilityTracePolicy + self.policyFeatureVectorFromStateAction(previousState, action) - self.sumOfProbTimesFeatures(previousState)
         self.policyWeights = self.policyWeights + self.alpha * tdError * self.elibibilityTracePolicy
 
+        pubAvgReward = rospy.Publisher('horde_AC/avgReward', Float64, queue_size=10)
+        pubAvgReward.publish(self.averageReward)
         print("============ End actor critic learn ============")
         print("-")
 

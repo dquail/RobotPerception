@@ -240,8 +240,6 @@ class LearningForeground:
         self.lastAction = action
 
     def updateActorCritic(self, newState):
-        print("LearningForeground received stateRepresentation encoder: " + str(newState.encoder))
-        print("@@@@@@@@@@@@ newState.X length: " + str(len(newState.X)))
         encoderPosition = newState.encoder
         speed = newState.speed
         load = newState.load
@@ -252,7 +250,7 @@ class LearningForeground:
                 self.actorCritic.learn(self.previousState, self.lastAction, newState)
 
     def updateDemons(self, newState):
-        print("LearningForeground received stateRepresentation encoder: " + str(newState.encoder))
+        print("LearningForeground received stateRepresentation encoder: " + str(newState.encoder) + ", speed: " + str(newState.speed))
 
         encoderPosition = newState.encoder
         speed = newState.speed
