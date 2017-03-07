@@ -32,6 +32,7 @@ from BehaviorPolicy import *
 from TileCoder import *
 from GVF import *
 from ActorCritic import *
+from ActorCriticContinuous import *
 from Verifier import *
 from PredictLoadDemon import *
 import time
@@ -168,6 +169,10 @@ def createActorCritic():
     ac = ActorCritic()
     return ac
 
+def createActorCriticContinuous():
+    ac = ActorCriticContinuous()
+    return ac
+
 class LearningForeground:
 
     def __init__(self):
@@ -185,7 +190,8 @@ class LearningForeground:
         self.pavlovDemon = False
         #self.demons = createPredictLoadGVFs()
         #self.demons = createHowLongUntilLeftGVFs()
-        self.actorCritic = createActorCritic()
+        #self.actorCritic = createActorCritic()
+        self.actorCritic = createActorCriticContinuous()
         #self.demons = createNextBitGVFs()
 
         #self.demons = createNextEncoderGVF()
@@ -226,6 +232,21 @@ class LearningForeground:
         pub = rospy.Publisher('tilt_controller/command', Float64, queue_size=10)
         pub.publish(self.currentRadians)
 
+    def performContinuousAction(self, action):
+        # bound this to an action value between 510 and 1023
+        # action is bounded between -10 and 10
+        self.lastAction = action
+
+        action = action + 10
+        pct = action / 20  # gets how close to the extreme it is
+        radians = 3.0 * pct
+        if radians < 0.0:
+            radians = 0.0
+        elif radians > 3.0:
+            radians = 3.0
+        pub = rospy.Publisher('tilt_controller/command', Float64, queue_size=10)
+        pub.publish(radians)
+
     def performAction(self, action):
         print("Performing action: "  + str(action))
         #Take the action and issue the actual dynamixel command
@@ -236,6 +257,10 @@ class LearningForeground:
             pub.publish(0.0)
         elif (action == 2):
             pub.publish(3.0)
+        elif (action >=510) & (action <= 1023):
+            pct = (action - 510) / (1023 - 510)
+            radians = 3.0 * pct
+            pub.publish(radians)
 
         self.lastAction = action
 
@@ -332,10 +357,11 @@ class LearningForeground:
             #action = self.behaviorPolicy()
             if self.actorCritic:
                 action = self.actorCritic.pickActionForState(newState)
+                self.performContinuousAction(action)
             else:
                 action  = self.behaviorPolicy.policy(newState)
+                self.performAction(action)
 
-            self.performAction(action)
 
         #3. Publish predictions and errors
         if self.previousState:

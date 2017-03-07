@@ -64,8 +64,6 @@ class ActorCritic:
             if ((state.encoder > 620) & (state.encoder < 700)):
                 pubProbabilitySpecial = rospy.Publisher('horde_AC/ProbOfActionInState' + str(i), Float64, queue_size=10)
                 pubProbabilitySpecial.publish(policyArray[i])
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
             i = i + 1
 
