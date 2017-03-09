@@ -29,6 +29,8 @@ $rostopic echo /observation_manager/state_update
 
 8. Start horde
 $rosrun horde Horde.py
+or
+$rosrun horde LearningForeground.py
 
 9 Start horde monitor (for plotting)
 $rosrun horde HordeMonitor.py

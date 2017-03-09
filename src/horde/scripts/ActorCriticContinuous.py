@@ -27,37 +27,80 @@ class ActorCriticContinuous():
         self.lambdaValue = 0.35
         self.averageReward = 0.0
 
+        self.isRewardGoingLeft = True
+        """
         self.stepSizeValue = 0.1
         self.stepSizeVariance = 0.01
         self.stepSizeMean = 10*self.stepSizeVariance
-        self.rewardStep = 0.01
+        self.rewardStep = 0.10
+        """
+
+        """
+        #Patricks values
+        self.stepSizeValue = 0.05
+        self.stepSizeVariance = 0.005
+        self.stepSizeMean = 0.005
+        self.rewardStep = 0.0005
+        """
+        """
+        self.stepSizeValue = 0.1
+        self.stepSizeVariance = 0.01
+        self.stepSizeMean = 0.02
+        self.rewardStep = 0.05
+        """
+        self.stepSizeValue = 0.01
+        self.stepSizeVariance = 0.01
+        self.stepSizeMean = 0.1
+        self.rewardStep = 0.005
+
+        self.i = 0
 
     def mean(self, state):
         m = numpy.inner(self.policyWeightsMean, state.X)
+        if m > 10.0:
+            m = 10
+        if m < -10.0:
+            m = -10.0
         return m
 
     def variance(self, state):
         v = numpy.exp(numpy.inner(self.policyWeightsVariance, state.X))
+        #on occasion, variance can be massive. so we bound it here
+        if numpy.isinf(v):
+            v = 5.0
+        elif v < 0.001:
+            v = 0.001
         return v
 
     def pickActionForState(self, state):
 
         print("******* pickActionForState ************")
         m = self.mean(state)
-        v = self.variance(state)
-        print("mean: " + str(m) + ", variance: " + str(v))
-        action = numpy.random.normal(m, v)
-        #Convert this into a value between 510 and 1023 encoder ticks
-        #action = (1023.0 + 510.0) / 2 + action* 10
-        print("action: " + str(action))
-
-        pubMean = rospy.Publisher('horde_AContinuous/Mean', Float64, queue_size=10)
+        v = self.variance(state) + 0.0000001 #to prevent against 0 variance
+        pubMean = rospy.Publisher('horde_AC/Continuous/Mean', Float64, queue_size=10)
         pubMean.publish(m)
 
-        pubVariance = rospy.Publisher('horde_AContinuous/Variance', Float64, queue_size=10)
+        pubVariance = rospy.Publisher('horde_AC/Continuous/Variance', Float64, queue_size=10)
         pubVariance.publish(v)
 
-        pubAction = rospy.Publisher('horde_AContinuous/Action', Float64, queue_size=10)
+        print("mean: " + str(m) + ", variance: " + str(v))
+        action = numpy.random.normal(m, v)
+        #generally between -10 and 10. If greater or less than these values can cause overflow and underflow
+        if ((state.encoder > 620) & (state.encoder < 700) & (state.speed <=0)):
+            pubMeanSpecial = rospy.Publisher('horde_AC/Continuous/MeanInState', Float64, queue_size=10)
+            pubMeanSpecial.publish(m)
+            pubVarianceSpecial = rospy.Publisher('horde_AC/Continuous/VarianceInState', Float64, queue_size=10)
+            pubVarianceSpecial.publish(v)
+
+        if action < -10.0:
+            action = -10.0 + 0.1*random.randint(1,4)
+
+        if action > 10.0:
+            action = 10.0 - 0.1*random.randint(1,4)
+
+        print("action: " + str(action))
+
+        pubAction = rospy.Publisher('horde_AC/Continuous/Action', Float64, queue_size=10)
         pubAction.publish(action)
 
         return action
@@ -70,15 +113,26 @@ class ActorCriticContinuous():
             return 0
 
     def reward(self, previousState, action, newState):
-        pubReward = rospy.Publisher('horde_AC/reward', Float64, queue_size=10)
 
         #Higher reward, the closer you are to 550
 
         rewardGoingLeft = (1023.0 - newState.encoder) / 100.0
-        rewardGoingRight = (newState.encoder - 510.0) / 100.0
+        rewardGoingRight = (newState.encoder - 510.0)/10.0
+        print("---- reward iteration: " + str(self.i))
+        self.i = self.i + 1
 
-        pubReward.publish(rewardGoingLeft)
-        return rewardGoingLeft
+        #if self.i % 5000 == 0:
+        if False:
+            self.i = 1
+            #flip every 150 steps (5 minutes)
+            print("*************** flipping reward function **********")
+            print("***************************************************")
+            self.isRewardGoingLeft = not self.isRewardGoingLeft
+
+        if self.isRewardGoingLeft:
+            return rewardGoingLeft
+        else:
+            return rewardGoingRight
 
 
     def learn(self, previousState, action, newState):
@@ -115,10 +169,16 @@ class ActorCriticContinuous():
             print("policyWeightsVariance: " )
             print(self.policyWeightsVariance)
 
-        pubReward = rospy.Publisher('horde_AC/Reward', Float64, queue_size=10)
-        pubReward.publish(self.reward)
+        pubReward = rospy.Publisher('horde_AC/Continuous/Reward', Float64, queue_size=10)
+        pubReward.publish(reward)
 
-        pubAvgReward = rospy.Publisher('horde_AC/avgReward', Float64, queue_size=10)
+        pubTD = rospy.Publisher('horde_AC/Continuous/TDError', Float64, queue_size=10)
+        pubTD.publish(tdError)
+
+        pubEncoder = rospy.Publisher('horde_AC/Continuous/Encoder', Float64, queue_size=10)
+        pubEncoder.publish(newState.encoder / 100.0)
+
+        pubAvgReward = rospy.Publisher('horde_AC/Continuous/AvgReward', Float64, queue_size=10)
         pubAvgReward.publish(self.averageReward)
         print("============ End continuous actor critic learn ============")
         print("-")
