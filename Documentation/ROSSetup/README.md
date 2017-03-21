@@ -1,10 +1,10 @@
-#Using ROS to monitor and control Dynamixel servos
+# Using ROS to monitor and control Dynamixel servos
 There's a reasonable amount of documentation on the ROS wiki http://wiki.ros.org/dynamixel_controllers/ that allows a person to get up and running with ROS + Dynamixel's. But it assumes a working knowledge of ROS ... something I didn't have, given this was my first project with the framework. So I'm putting this guide together, mostly as reference for myself, but also hoping it might be useful for someone looking to control their Dynamixel servos with ROS. Getting to a point where I could control the servos and monitor and plot their behavior took about 4 hours of my time. Hopefully this will save myself and others time in future project.
 
-##Prerequesites
+## Prerequesites
 The only assumption that I have is that you have ROS (I used Indigo) installed, as well as Python (I used 2.7). Almost all of the issues I encountered were related to mismatched versions of Python packages. I spent a lot of time forcing ROS to use 2.7 as well as the proper versions of packages like pyserial. Someone more familiar with Anaconda, pip, and linux fundamentals will have a much easier time spelunking through these issues. 
 
-##Getting started
+## Getting started
 
 *Currently I need to activate python 2.7 and source the bash file for each terminal window that is opened. Otherwise ... cryptic errors be had! I'm sure there's an elegant way to set up bash so I don't have to do this each time ...
 
@@ -13,7 +13,7 @@ $source activate py27
 $source ./devel/setup.bash
 ```
 
-###1. Create the workspace folder structure.
+### 1. Create the workspace folder structure.
 A workspace is where common packages for your project will exist. You can have multiple workspaces spread across your filesystem.   
 
 For me, I'm creating a project that will eventually allow a robotic digger to learn the optimal way to dig sand. Hence the name of the workspace
@@ -23,13 +23,13 @@ $cd RobotDigger
 $mkdir src
 ```
 
-###2. Initialize the workspace:
+### 2. Initialize the workspace:
 ```
 $cd src
 $catkin_init_workspace
 ```
 
-###3. Build the workspace:
+### 3. Build the workspace:
 *This will create the required files needed for ROS to run your packages
 ```
 $cd ..
@@ -38,24 +38,24 @@ $catkin_make
 
 *Note - I needed to pip install catkin_pkg
 
-###4. Create a package:
+### 4. Create a package:
 We want to test creating a simple package that publishes and subscribes to messages. This isn't directly used by our project but it gives us a basic understanding of publish/subscribe.
  
 ```
 $catkin_create_pkg robot_digger std_msgs rospy roscpp
 ```
 
-###5. Add the workspace to your ROS environment
+### 5. Add the workspace to your ROS environment
 ```
 $source devel/setup.bash
 ```
 
 *NOTE I need to do this in each terminal window! There's obviously a way to do so without having to type this into a new terminal window each time ... but I don't know what it is at the moment.
 
-###6. Edit the resulting src/robot_digger/package.xml
+### 6. Edit the resulting src/robot_digger/package.xml
 This gets you into the habit of including a proper description, for your package.
 
-###7. Create a publisher node
+### 7. Create a publisher node
 ```
 #Create a script folder at same level as src
 $mkdir scripts 
@@ -63,19 +63,19 @@ $ wget https://raw.github.com/ros/ros_tutorials/kinetic-devel/rospy_tutorials/00
 #Remember to always make these executable
 $ chmod +x talker.py
 ```
-###8. Create the subscriber node
+### 8. Create the subscriber node
 ```
 $ wget https://raw.github.com/ros/ros_tutorials/kinetic-devel/rospy_tutorials/001_talker_listener/listener.py
 $ chmod +x listener.py
 ```
 
-###9. Create the package
+### 9. Create the package
 ```
 $cd ..
 $catkin_make
 ```
 
-###10. Start the publisher
+### 10. Start the publisher
 ```
 #Make sure roscore is running
 $roscore
@@ -84,22 +84,22 @@ $rosrun robot_digger talker.py
 
 I needed to pip install rospkg
 
-###10. Install dynamixel_ros - Creating a different test package
+### 10. Install dynamixel_ros - Creating a different test package
 ```
 $sudo apt-get install ros-indigo-dynamixel-motor
 ```
 
-###11. Create test package for dynamixel
+### 11. Create test package for dynamixel
 ```
 $catkin_create_pkg my_dynamixel_tutorial dynamixel_controllers std_msgs rospy roscpp
 ```
-###12. Create the launch file for easily launching the controller
+### 12. Create the launch file for easily launching the controller
 ```
 $mkdir launch
 $cd launch
 ```
 
-###13. Create controller_manager.launch with:
+### 13. Create controller_manager.launch with:
 ```
 <!-- -*- mode: XML -*- -->
 
@@ -130,22 +130,22 @@ source activate py27
 A whole bunch of issues around getting the right version of python. It needs to be 2.7. That's what indigo uses. So you also need to make sure that that version
 is using pyserial 2.7 (an old version.)
 
-###13. Make sure that roscore is running
+### 13. Make sure that roscore is running
 ```
 $roscore
 ```
 
-###14. Start the controller_manager
+### 14. Start the controller_manager
 ```
 $roslaunch my_dynamixel_tutorial controller_manager.launch
 ```
 
-###15. Look at the output
+### 15. Look at the output
 ```
 $rostopic echo /motor_states/pan_tilt_port
 ```
 
-###16. Control the motor
+### 16. Control the motor
 Create the yaml file tilt.yaml
 ```yaml
 tilt_controller:
@@ -185,7 +185,7 @@ Move the motor
 rostopic pub -1 /tilt_controller/command std_msgs/Float64 -- 1.5
 ```
 
-###17. Plotting the data
+### 17. Plotting the data
 ROS has a nice plotting tool called rqt_plot
 You can launch it using 
 
