@@ -13,3 +13,8 @@ There are several parts to this and thus, several layers of documentation.
 - Presents an architecture that is capable of learning thousands of general value functions in parallel, based of just the sensorimotor information from the servos. 
 - Demonstrates how to alter the behavior of the robot based on these predictions
 - Demonstrates how to use error measures that reflect learning progress.
+
+### [Policy gradient](Documentation/RobotModule4/RobotModule4WriteUp.pdf)
+- Presents an example of using policy gradient to control the actuator directly be adjusting the policy rather than by adjusting the value function.
+- Demonstrates using Actor Critic methods
+- Demonstrates using continuous actions - by parameterizing the mean and variance by which actions are taken.
