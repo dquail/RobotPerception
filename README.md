@@ -3,7 +3,7 @@ Within this repository we are attempting to achieve computational perception via
 
 There are several parts to this and thus, several layers of documentation.
 
-### [ROS Setup]("Documentation/ROS Setup/README.md")
+### [ROS Setup](Documentation/ROSSetup/README.md)
 - Provides steps required to install ROS, and begin to send command to a dynamixel servo, as well as reading data from the servo.
 
 ### [General value function experiments](Documentation/RobotModule2/README.md)
