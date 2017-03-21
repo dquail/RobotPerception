@@ -1,4 +1,4 @@
-#General value functions in robots
+# General value functions in robots
 An ability to predict future outcomes is powerful for any type of intelligence - human or artificial. A child able to predict it will fall off it’s bicycle if it continues down the hill; a child that is able to predict it won’t fall off it’s bicycle if it applies the breaks; a car that’s able to predict how long it will be able to drive before running out of gas.; a hockey player who predicts she will go offside if she doesn’t slow turn. These are examples of predictions that represent knowledge that can inform the intelligent agent what might be wise to do next.
 
 General value functions are an attempt to articulate and answer these questions in a computationally efficient way, using only the agents sensorimotor inputs. In this project we look to explain the framework used for testing such a system, as well as exploring the results of three such questions to our system.
