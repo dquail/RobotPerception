@@ -38,6 +38,8 @@ from dynamixel_msgs.msg import MotorStateList
 
 from TileCoder import *
 
+import json
+
 """
 sets up the subscribers and starts to broadcast the results in a thread every 0.1 seconds
 """
@@ -45,7 +47,7 @@ sets up the subscribers and starts to broadcast the results in a thread every 0.
 class ObservationManager:
 
     def __init__(self):
-        self.publishingFrequency = 0.5 #Seconds between updates
+        self.publishingFrequency = 1.1 #Seconds between updates
 
         #Initialize the sensory values of interest
         self.motoEncoder = 0
@@ -60,6 +62,8 @@ class ObservationManager:
         self.timestamp = 0
 
         self.lastX = [0.0] * TileCoder.numberOfTiles * TileCoder.numberOfTilings * TileCoder.numberOfTilings
+
+        self.file = open('jsonData.json', 'w')
 
     """
     motorStatesCallback(self, data)
@@ -98,6 +102,11 @@ class ObservationManager:
         self.speed = data.motor_states[0].speed
         self.load = data.motor_states[0].load
         self.timestamp = data.motor_states[0].timestamp
+
+        # print this to a file
+        jsonData = {"speed": data.motor_states[0].speed, "position": data.motor_states[0].position, "load":data.motor_states[0].load, "voltage":data.motor_states[0].voltage, "temperature": data.motor_states[0].temperature, "timestamp": data.motor_states[0].timestamp}
+        json.dump(jsonData, self.file)
+        self.file.write('\n')
 
     def publishObservation(self):
         print("In publish observation")

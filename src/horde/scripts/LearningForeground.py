@@ -188,10 +188,11 @@ class LearningForeground:
 
         #Initialize the demons appropriately depending on what test you are runnning by commenting / uncommenting
         self.pavlovDemon = False
+        self.actorCritic = False
         #self.demons = createPredictLoadGVFs()
         #self.demons = createHowLongUntilLeftGVFs()
         #self.actorCritic = createActorCritic()
-        self.actorCritic = createActorCriticContinuous()
+        #self.actorCritic = createActorCriticContinuous()
         #self.demons = createNextBitGVFs()
 
         #self.demons = createNextEncoderGVF()
