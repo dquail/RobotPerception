@@ -178,13 +178,13 @@ class LearningForeground:
         self.increasingRadians = True
 
         #Initialize the demons appropriately depending on what test you are runnning by commenting / uncommenting
-        self.pavlovDemon = False
+        self.pavlovDemon = True
         #self.demons = createPredictLoadGVFs()
-        self.demons = createHowLongUntilLeftGVFs()
+        #self.demons = createHowLongUntilLeftGVFs()
         #self.demons = createNextBitGVFs()
 
-        #self.demons = createNextEncoderGVF()
-        #self.pavlovDemon = self.demons[0]
+        self.demons = createNextEncoderGVF()
+        self.pavlovDemon = self.demons[0]
 
         self.previousState = False
 
@@ -289,7 +289,8 @@ class LearningForeground:
         #TODO Remove after testing magic 301
         #e = (newState.encoder - 510.0) / 5.0
         e = (newState.encoder)
-        e = 100 * (e - 510.0) / (1023.0 - 510.0)
+        #e = 100 * (e - 510.0) / (1023.0 - 510.0)
+        #e = 100 * (e - 510.0) / (1023.0 - 510.0)
         pubCumulant = rospy.Publisher('horde_verifier/EncoderPosition', Float64, queue_size=10)
         pubCumulant.publish(e)
         #1. Learn
@@ -312,10 +313,10 @@ class LearningForeground:
         if pavlovSignal == True:
             self.performPavlov()
         else:
-            #self.performSlowBackAndForth()
+            self.performSlowBackAndForth()
             #action = self.behaviorPolicy()
-            action  = self.behaviorPolicy.policy(newState)
-            self.performAction(action)
+            #action  = self.behaviorPolicy.policy(newState)
+            #self.performAction(action)
 
         #3. Publish predictions and errors
         if self.previousState:
